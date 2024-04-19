@@ -16,6 +16,7 @@
 
 package com.google.mlkit.vision.demo.java.posedetector;
 
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -31,6 +32,12 @@ import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;
 import java.util.List;
 import java.util.Locale;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 /** Draw the detected pose in preview. */
 public class PoseGraphic extends Graphic {
@@ -105,6 +112,15 @@ public class PoseGraphic extends Graphic {
               - POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size() - i));
       canvas.drawText(
               poseClassification.get(i), classificationX, classificationY, classificationTextPaint);
+      if( i == poseClassification.size() - 1){
+        String[] parts = poseClassification.get(i).split(":");
+        Log.w("parts",parts[0]);
+        double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
+        //showPopText(conf);
+        if(parts[0].equals("squats_down ") && conf > 0.9 ){
+          drawNotice(canvas);
+        }
+      }
     }
 
 
@@ -203,7 +219,68 @@ public class PoseGraphic extends Graphic {
             whitePaint);
       }
     }
+
+
   }
+
+  void drawNotice(Canvas canvas){
+    String text = "你的动作很标准，请继续保持";
+
+    int viewWidth = canvas.getWidth();
+    int viewHeight = canvas.getHeight();
+    Paint paint = new Paint();
+    // 绘制透明底
+    //canvas.drawColor(Color.parseColor("#80000000")); // 半透明黑色背景
+
+    // 绘制白色小矩形
+    int rectWidth = viewWidth;
+    int rectHeight = 300;
+    int rectX = 0;
+    int rectY = 0;
+    paint.setColor(Color.parseColor("#A0FFFFFF"));
+    canvas.drawRect(rectX, rectY, viewWidth, rectHeight, paint);
+
+    // 绘制文字
+    paint.setColor(Color.BLACK);
+    paint.setTextSize(60);
+    float textWidth = paint.measureText(text); // 获取文字的宽度
+    float textX = rectX + (rectWidth - textWidth) / 2; // 计算文字的 x 坐标，使其居中显示在矩形内部
+    float textY = rectY + rectHeight / 2 + 15; // 计算文字的 y 坐标，使其居中显示在矩形内部
+    canvas.drawText(text, textX, textY, paint);
+  }
+
+//  public AlertDialog alertDialog;
+//  void showPopText(double confidence){
+//    AlertDialog.Builder builder = new AlertDialog.Builder(this.getApplicationContext());
+//
+//    // 可选：设置弹窗的标题、消息等
+//    builder.setTitle("弹窗标题");
+//    builder.setMessage("这是一个弹窗消息。");
+//
+//    // 创建并显示弹窗
+//    alertDialog = builder.create();
+//    alertDialog.show();
+//    if (confidence > 0.8) {
+//      showPopup();
+//    }
+//    else{
+//      hidePopup();
+//    }
+//  }
+//
+//  // 显示弹窗方法
+//  private void showPopup() {
+//    if (alertDialog != null && !alertDialog.isShowing()) {
+//      alertDialog.show();
+//    }
+//  }
+//
+//  // 隐藏弹窗方法
+//  private void hidePopup() {
+//    if (alertDialog != null && alertDialog.isShowing()) {
+//      alertDialog.dismiss();
+//    }
+//  }
 
   void drawPoint(Canvas canvas, PoseLandmark landmark, Paint paint) {
     PointF3D point = landmark.getPosition3D();

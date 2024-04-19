@@ -136,7 +136,7 @@ public class PoseClassifierProcessor {
       String maxConfidenceClass = classification.getMaxConfidenceClass();
       String maxConfidenceClassResult = String.format(
           Locale.US,
-          "%s : %.2f confidence",
+          "%s : %.2f confidence"/*原来是"%s : %.2f confidence"*/,
           maxConfidenceClass,
           classification.getClassConfidence(maxConfidenceClass)
               / poseClassifier.confidenceRange());
