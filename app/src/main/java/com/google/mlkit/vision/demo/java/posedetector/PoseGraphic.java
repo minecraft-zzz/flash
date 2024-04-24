@@ -55,6 +55,7 @@ public class PoseGraphic extends Graphic {
   private float zMax = Float.MIN_VALUE;
 
   private final List<String> poseClassification;
+  private final String poseAccuracy;
   private final Paint classificationTextPaint;
   private final Paint leftPaint;
   private final Paint rightPaint;
@@ -66,12 +67,14 @@ public class PoseGraphic extends Graphic {
       boolean showInFrameLikelihood,
       boolean visualizeZ,
       boolean rescaleZForVisualization,
-      List<String> poseClassification) {
+      List<String> poseClassification,
+      String poseAccuracy) {
     super(overlay);
     this.pose = pose;
     this.showInFrameLikelihood = showInFrameLikelihood;
     this.visualizeZ = visualizeZ;
     this.rescaleZForVisualization = rescaleZForVisualization;
+    this.poseAccuracy  = poseAccuracy;
 
     this.poseClassification = poseClassification;
     classificationTextPaint = new Paint();
@@ -112,17 +115,22 @@ public class PoseGraphic extends Graphic {
               - POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size() - i));
       canvas.drawText(
               poseClassification.get(i), classificationX, classificationY, classificationTextPaint);
-      if( i == poseClassification.size() - 1){
-        String[] parts = poseClassification.get(i).split(":");
-        Log.w("parts",parts[0]);
-        double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
-        //showPopText(conf);
-        if(parts[0].equals("squats_down ") && conf > 0.9 ){
-          drawNotice(canvas);
-        }
-      }
+//      if( i == poseClassification.size() - 1){
+//        String[] parts = poseClassification.get(i).split(":");
+//        //Log.w("parts",parts[0]);
+//        double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
+//        //showPopText(conf);
+//        if(parts[0].equals("squats_down ") && conf > 0.9 ){
+//          drawNotice(canvas);
+//        }
+//      }
     }
 
+    if(poseAccuracy != ""){
+      if(poseAccuracy.equals("Accurate Pose")) {
+        drawNotice(canvas);
+      }
+    }
 
     // Draw all the points
     for (PoseLandmark landmark : landmarks) {
@@ -237,7 +245,7 @@ public class PoseGraphic extends Graphic {
     int rectHeight = 300;
     int rectX = 0;
     int rectY = 0;
-    paint.setColor(Color.parseColor("#A0FFFFFF"));
+    paint.setColor(Color.parseColor("#A000FF00"));
     canvas.drawRect(rectX, rectY, viewWidth, rectHeight, paint);
 
     // 绘制文字
@@ -249,38 +257,6 @@ public class PoseGraphic extends Graphic {
     canvas.drawText(text, textX, textY, paint);
   }
 
-//  public AlertDialog alertDialog;
-//  void showPopText(double confidence){
-//    AlertDialog.Builder builder = new AlertDialog.Builder(this.getApplicationContext());
-//
-//    // 可选：设置弹窗的标题、消息等
-//    builder.setTitle("弹窗标题");
-//    builder.setMessage("这是一个弹窗消息。");
-//
-//    // 创建并显示弹窗
-//    alertDialog = builder.create();
-//    alertDialog.show();
-//    if (confidence > 0.8) {
-//      showPopup();
-//    }
-//    else{
-//      hidePopup();
-//    }
-//  }
-//
-//  // 显示弹窗方法
-//  private void showPopup() {
-//    if (alertDialog != null && !alertDialog.isShowing()) {
-//      alertDialog.show();
-//    }
-//  }
-//
-//  // 隐藏弹窗方法
-//  private void hidePopup() {
-//    if (alertDialog != null && alertDialog.isShowing()) {
-//      alertDialog.dismiss();
-//    }
-//  }
 
   void drawPoint(Canvas canvas, PoseLandmark landmark, Paint paint) {
     PointF3D point = landmark.getPosition3D();

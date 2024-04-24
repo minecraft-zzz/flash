@@ -48,16 +48,19 @@ public class PoseDetectorProcessor
   private final boolean isStreamMode;
   private final Context context;
   private final Executor classificationExecutor;
+  private final double enterThreshold;
 
   private PoseClassifierProcessor poseClassifierProcessor;
   /** Internal class to hold Pose and classification results. */
   protected static class PoseWithClassification {
     private final Pose pose;
     private final List<String> classificationResult;
+    private final String poseAccuracy;
 
-    public PoseWithClassification(Pose pose, List<String> classificationResult) {
+    public PoseWithClassification(Pose pose, List<String> classificationResult,String poseAccuracy) {
       this.pose = pose;
       this.classificationResult = classificationResult;
+      this.poseAccuracy = poseAccuracy;
     }
 
     public Pose getPose() {
@@ -67,7 +70,11 @@ public class PoseDetectorProcessor
     public List<String> getClassificationResult() {
       return classificationResult;
     }
+
+    public String getPoseAccuracy() {return poseAccuracy;}
   }
+
+
 
   public PoseDetectorProcessor(
       Context context,
@@ -86,6 +93,7 @@ public class PoseDetectorProcessor
     this.isStreamMode = isStreamMode;
     this.context = context;
     classificationExecutor = Executors.newSingleThreadExecutor();
+    enterThreshold = 0.9;
   }
 
   @Override
@@ -109,7 +117,16 @@ public class PoseDetectorProcessor
                 }
                 classificationResult = poseClassifierProcessor.getPoseResult(pose);
               }
-              return new PoseWithClassification(pose, classificationResult);
+              String poseAccuracy = "";
+//              if(isEndteredPose(classificationResult)){
+//                poseAccuracy = poseClassifierProcessor.getPoseAccuracy(pose);
+//              }
+
+              if(classificationResult.size() >= 2 && getClass(classificationResult).equals("squats_down ")){
+                double conf = getConf(classificationResult);
+                poseAccuracy = poseClassifierProcessor.getPoseAccuracy(pose,conf);
+              }
+              return new PoseWithClassification(pose, classificationResult, poseAccuracy);
             });
   }
 
@@ -128,7 +145,16 @@ public class PoseDetectorProcessor
                 }
                 classificationResult = poseClassifierProcessor.getPoseResult(pose);
               }
-              return new PoseWithClassification(pose, classificationResult);
+              String poseAccuracy = "";
+//              if(isEndteredPose(classificationResult)){
+//                poseAccuracy = poseClassifierProcessor.getPoseAccuracy(pose);
+//              }
+
+              if(classificationResult.size() >= 2 && getClass(classificationResult).equals("squats_down ")){
+                double conf = getConf(classificationResult);
+                poseAccuracy = poseClassifierProcessor.getPoseAccuracy(pose,conf);
+              }
+              return new PoseWithClassification(pose, classificationResult, poseAccuracy);
             });
   }
 
@@ -143,7 +169,8 @@ public class PoseDetectorProcessor
             showInFrameLikelihood,
             visualizeZ,
             rescaleZForVisualization,
-            poseWithClassification.classificationResult));
+            poseWithClassification.classificationResult,
+            poseWithClassification.poseAccuracy));
   }
 
   @Override
@@ -156,4 +183,32 @@ public class PoseDetectorProcessor
     // Use MlImage in Pose Detection by default, change it to OFF to switch to InputImage.
     return true;
   }
+
+  private boolean isEndteredPose(List<String> clsR){
+    boolean flag = false;
+    if(clsR.size() < 2){
+      return false;
+    }
+    String[] parts = clsR.get(1).split(":");
+    //Log.e("parts",parts[0]);
+    //Log.e("parts", String.valueOf(clsR.size()));
+    double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
+    if(parts[0].equals("squats_down ") && conf > enterThreshold ){flag = true;}
+    return flag;
+  }
+
+  private double getConf(List<String> clsR){
+    String[] parts = clsR.get(1).split(":");
+    //Log.e("parts",parts[0]);
+    //Log.e("parts", String.valueOf(clsR.size()));
+    double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
+    return conf;
+  }
+
+  private String getClass(List<String> clsR){
+    String[] parts = clsR.get(1).split(":");
+    return parts[0];
+  }
+
 }
+

@@ -28,8 +28,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Accepts a stream of {@link Pose} for classification and Rep counting.
@@ -37,6 +39,7 @@ import java.util.Locale;
 public class PoseClassifierProcessor {
   private static final String TAG = "PoseClassifierProcessor";
   private static final String POSE_SAMPLES_FILE = "pose/fitness_pose_samples.csv";
+  private static final String POSE_ACCURACY_SAMPLES_FILE = "pose/squat_down_wrong.csv";
 
   // Specify classes for which we want rep counting.
   // These are the labels in the given {@code POSE_SAMPLES_FILE}. You can set your own class labels
@@ -52,7 +55,17 @@ public class PoseClassifierProcessor {
   private EMASmoothing emaSmoothing;
   private List<RepetitionCounter> repCounters;
   private PoseClassifier poseClassifier;
+  private PoseAccuracyClassifier poseAccuracyClassifier;
   private String lastRepResult;
+
+  private boolean isEnteredPose;
+  private int residualFrames;
+  private static final double threshold = 0.9;
+  private List<String> poseAccuracy;
+  private static final float duration = 1;
+  private static final int detectFrames = 10;
+  private long startTime;
+  private String retPose;
 
   @WorkerThread
   public PoseClassifierProcessor(Context context, boolean isStreamMode) {
@@ -63,11 +76,17 @@ public class PoseClassifierProcessor {
       repCounters = new ArrayList<>();
       lastRepResult = "";
     }
+    isEnteredPose = false;
+    residualFrames = detectFrames;
+    poseAccuracy = new ArrayList<>();
+    startTime = System.currentTimeMillis();
+    retPose = "";
     loadPoseSamples(context);
   }
 
   private void loadPoseSamples(Context context) {
     List<PoseSample> poseSamples = new ArrayList<>();
+    List<PoseSample> poseAccuracySamples = new ArrayList<>();
     try {
       BufferedReader reader = new BufferedReader(
           new InputStreamReader(context.getAssets().open(POSE_SAMPLES_FILE)));
@@ -83,7 +102,23 @@ public class PoseClassifierProcessor {
     } catch (IOException e) {
       Log.e(TAG, "Error when loading pose samples.\n" + e);
     }
+    try {
+      BufferedReader reader = new BufferedReader(
+              new InputStreamReader(context.getAssets().open(POSE_ACCURACY_SAMPLES_FILE)));
+      String csvLine = reader.readLine();
+      while (csvLine != null) {
+        // If line is not a valid {@link PoseSample}, we'll get null and skip adding to the list.
+        PoseSample poseSample = PoseSample.getPoseSample(csvLine, ",");
+        if (poseSample != null) {
+          poseAccuracySamples.add(poseSample);
+        }
+        csvLine = reader.readLine();
+      }
+    } catch (IOException e) {
+      Log.e(TAG, "Error when loading pose accuracy samples.\n" + e);
+    }
     poseClassifier = new PoseClassifier(poseSamples);
+    poseAccuracyClassifier = new PoseAccuracyClassifier(poseAccuracySamples);
     if (isStreamMode) {
       for (String className : POSE_CLASSES) {
         repCounters.add(new RepetitionCounter(className));
@@ -133,10 +168,11 @@ public class PoseClassifierProcessor {
 
     // Add maxConfidence class of current frame to result if pose is found.
     if (!pose.getAllPoseLandmarks().isEmpty()) {
-      String maxConfidenceClass = classification.getMaxConfidenceClass();
+      //String maxConfidenceClass = classification.getMaxConfidenceClass();
+      String maxConfidenceClass = SQUATS_CLASS;
       String maxConfidenceClassResult = String.format(
           Locale.US,
-          "%s : %.2f confidence"/*原来是"%s : %.2f confidence"*/,
+          "%s : %.2f confidence",
           maxConfidenceClass,
           classification.getClassConfidence(maxConfidenceClass)
               / poseClassifier.confidenceRange());
@@ -154,4 +190,70 @@ public class PoseClassifierProcessor {
     return result;
   }
 
+  @WorkerThread
+  public String getPoseAccuracy(Pose pose,double conf){
+    if (!isEnteredPose && conf >= threshold){
+      isEnteredPose = true;
+      residualFrames = detectFrames;
+      poseAccuracy = new ArrayList<>();
+      retPose = "";
+    }
+    if (isEnteredPose && conf >= threshold){
+      if (residualFrames > 0){
+        residualFrames--;
+        String poseForThisFrame = poseAccuracyClassifier.getPoseAccuracy(pose);
+        poseAccuracy.add(poseForThisFrame);
+      }
+      else if (residualFrames == 0){
+        retPose = getMostCommonElement(poseAccuracy);
+        startTime = System.currentTimeMillis();
+      }
+    }
+    if(isEnteredPose && conf < threshold){
+      if (residualFrames > 0){
+        retPose = "too fast";
+      }
+      isEnteredPose = false;
+    }
+    if (updateReturnPose(startTime)){retPose = "";}
+    return retPose;
+  }
+
+
+  public static String getMostCommonElement(List<String> list) {
+    // 创建一个 HashMap 来统计每个字符串出现的次数
+    Map<String, Integer> frequencyMap = new HashMap<>();
+
+    // 统计每个字符串出现的次数
+    for (String str : list) {
+      Integer frequency = frequencyMap.get(str);
+      if (frequency == null) {
+        frequency = 0;
+      }
+      frequencyMap.put(str, frequency + 1);
+    }
+
+    // 找出出现次数最多的字符串
+    String mostCommonElement = ""; // 默认为空字符串
+    int maxFrequency = 0;
+
+    for (Map.Entry<String, Integer> entry : frequencyMap.entrySet()) {
+      String key = entry.getKey();
+      int frequency = entry.getValue();
+
+      if (frequency > maxFrequency) {
+        mostCommonElement = key;
+        maxFrequency = frequency;
+      }
+    }
+
+    return mostCommonElement;
+  }
+
+
+  public boolean updateReturnPose(long start){
+    long now = System.currentTimeMillis();
+    float time = (float) ((now - start) / 1000.0);
+    return time > duration;
+  }
 }
