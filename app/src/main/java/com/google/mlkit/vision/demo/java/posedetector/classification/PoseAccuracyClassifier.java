@@ -62,8 +62,8 @@ public class PoseAccuracyClassifier {
 
     public String getPoseAccuracy(Pose pose) {
         ClassificationResult result = classify(extractPoseLandmarks(pose));
-        //return result.getMaxConfidenceClasses()
-        return "Accurate Pose";
+        return result.getMaxConfidenceClasses();
+        //return "Accurate Pose";
     }
 
     public ClassificationResult classify(List<PointF3D> landmarks) {

@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -150,6 +151,14 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
               SettingsActivity.LaunchSource.CAMERAX_LIVE_PREVIEW);
           startActivity(intent);
         });
+
+//    Button stopButton = findViewById(R.id.stop_button);
+//    stopButton.setOnClickListener(
+//      v -> {
+//        Intent intent = new Intent(getApplicationContext(),ResultActivity.class);
+//        startActivity(intent);
+//      }
+//    );
   }
 
   @Override

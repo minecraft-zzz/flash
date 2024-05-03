@@ -39,7 +39,7 @@ import java.util.Map;
 public class PoseClassifierProcessor {
   private static final String TAG = "PoseClassifierProcessor";
   private static final String POSE_SAMPLES_FILE = "pose/fitness_pose_samples.csv";
-  private static final String POSE_ACCURACY_SAMPLES_FILE = "pose/squat_down_wrong.csv";
+  private static final String POSE_ACCURACY_SAMPLES_FILE = "pose/squat_accuracy_csv_out.csv";
 
   // Specify classes for which we want rep counting.
   // These are the labels in the given {@code POSE_SAMPLES_FILE}. You can set your own class labels

@@ -127,9 +127,10 @@ public class PoseGraphic extends Graphic {
     }
 
     if(poseAccuracy != ""){
-      if(poseAccuracy.equals("Accurate Pose")) {
-        drawNotice(canvas);
-      }
+//      if(poseAccuracy.equals("Accurate Pose")) {
+//        drawNotice(canvas);
+//      }
+        drawNotice(canvas,poseAccuracy);
     }
 
     // Draw all the points
@@ -231,8 +232,9 @@ public class PoseGraphic extends Graphic {
 
   }
 
-  void drawNotice(Canvas canvas){
-    String text = "你的动作很标准，请继续保持";
+  void drawNotice(Canvas canvas,String poseAccuracy){
+    //String text = "你的动作很标准，请继续保持";
+    String text = poseAccuracy;
 
     int viewWidth = canvas.getWidth();
     int viewHeight = canvas.getHeight();
@@ -245,7 +247,13 @@ public class PoseGraphic extends Graphic {
     int rectHeight = 300;
     int rectX = 0;
     int rectY = 0;
-    paint.setColor(Color.parseColor("#A000FF00"));
+    if (text.equals("standard")){
+      paint.setColor(Color.parseColor("#A000FF00"));
+    }
+    else
+    {
+      paint.setColor(Color.parseColor("#A0FF0000"));
+    }
     canvas.drawRect(rectX, rectY, viewWidth, rectHeight, paint);
 
     // 绘制文字
