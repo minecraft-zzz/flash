@@ -5,6 +5,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- 其他主题属性 -->
         <item name="android:windowAnimationStyle">@style/AppTheme.WindowAnimation</item>
+
     </style>
 
     <style name="AppTheme.WindowAnimation">

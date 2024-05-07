@@ -26,7 +26,7 @@
         android:name="androidx.multidex.MultiDexApplication"
         android:icon="@drawable/flash"
         android:label="Flash健身"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -2,15 +2,20 @@ package com.google.mlkit.vision.demo.java;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.mlkit.vision.demo.R;
 
-public class Activity_diary extends Activity {
+public class Activity_diary extends BaseActivity {
 
     private TextView titleTextView;
     private TextView contentTextView;
@@ -20,6 +25,8 @@ public class Activity_diary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
 
+        getSupportActionBar().hide();
+
         LinearLayout homeNav = findViewById(R.id.home);
         LinearLayout libraryNav = findViewById(R.id.action);
         LinearLayout profileNav = findViewById(R.id.person);
@@ -27,6 +34,9 @@ public class Activity_diary extends Activity {
 
         titleTextView = findViewById(R.id.title); // 找到用于显示标题的 TextView
         contentTextView = findViewById(R.id.textview); // 找到用于显示内容的 TextView
+
+        int savedNightMode = getSavedNightModeState();
+        AppCompatDelegate.setDefaultNightMode(savedNightMode);
 
         // 接收来自 diary_new 页面的标题和内容
         Intent intent = getIntent();
@@ -65,6 +75,7 @@ public class Activity_diary extends Activity {
                 // 点击 "主页" 导航项，启动相应的 Activity
                 Intent intent = new Intent(Activity_diary.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -74,6 +85,7 @@ public class Activity_diary extends Activity {
                 // 点击 "动作库" 导航项，启动相应的 Activity
                 Intent intent = new Intent(Activity_diary.this, Activity_action.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -83,8 +95,8 @@ public class Activity_diary extends Activity {
                 // 点击 "个人" 导航项，启动相应的 Activity
                 Intent intent = new Intent(Activity_diary.this, Activity_person.class);
                 startActivity(intent);
+                finish();
             }
         });
-
     }
 }
