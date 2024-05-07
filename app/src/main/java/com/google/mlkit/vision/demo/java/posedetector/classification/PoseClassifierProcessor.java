@@ -203,6 +203,9 @@ public class PoseClassifierProcessor {
         residualFrames--;
         String poseForThisFrame = poseAccuracyClassifier.getPoseAccuracy(pose);
         poseAccuracy.add(poseForThisFrame);
+        if (!poseForThisFrame.equals("standard")){
+
+        }
       }
       else if (residualFrames == 0){
         retPose = getMostCommonElement(poseAccuracy);

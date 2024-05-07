@@ -69,6 +69,12 @@ import com.google.mlkit.vision.text.devanagari.DevanagariTextRecognizerOptions;
 import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions;
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,13 +158,13 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
           startActivity(intent);
         });
 
-//    Button stopButton = findViewById(R.id.stop_button);
-//    stopButton.setOnClickListener(
-//      v -> {
-//        Intent intent = new Intent(getApplicationContext(),ResultActivity.class);
-//        startActivity(intent);
-//      }
-//    );
+    Button stopButton = findViewById(R.id.stop_button);
+    stopButton.setOnClickListener(
+        v ->{
+          Intent intent = new Intent(getApplicationContext(),ResultActivity.class);
+          startActivity(intent);
+        }
+    );
   }
 
   @Override
@@ -236,11 +242,61 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
     if (cameraProvider != null) {
       // As required by CameraX API, unbinds all use cases before trying to re-bind any of them.
       cameraProvider.unbindAll();
+
+      // 检查是否存在 pose_result 文件夹，如果不存在则创建
+      File poseResultFolder = new File(getFilesDir(), "pose_result");
+      if (!poseResultFolder.exists()) {
+        poseResultFolder.mkdirs(); // 创建文件夹
+      }
+
       bindPreviewUseCase();
+
+      // 判断 pose_result 文件夹是否为空，如果不为空则清空文件夹
+      clearFolder(poseResultFolder);
+      // 获取当前时间戳
+      long currentTimeMillis = System.currentTimeMillis();
+      // 将当前时间戳写入到 pose_result 文件夹中的 startTime.txt 文件
+      writeTimestampToFile(poseResultFolder, currentTimeMillis);
+
       bindAnalysisUseCase();
     }
   }
 
+  private void clearFolder(File folder) {
+    if (folder.isDirectory()) {
+      File[] files = folder.listFiles();
+      if (files != null) {
+        for (File file : files) {
+          file.delete(); // 删除文件
+        }
+      }
+    }
+  }
+
+  private void writeTimestampToFile(File folder, long timestamp) {
+    File file = new File(folder, "startTime.txt");
+    writeToFile(file, String.valueOf(timestamp));
+  }
+
+  private void writeToFile(File file, String content) {
+    FileOutputStream fos = null;
+    try {
+      fos = new FileOutputStream(file);
+      fos.write(content.getBytes());
+      fos.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (fos != null) {
+        try {
+          fos.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+  
   private void bindPreviewUseCase() {
     if (!PreferenceUtils.isCameraLiveViewportEnabled(this)) {
       return;

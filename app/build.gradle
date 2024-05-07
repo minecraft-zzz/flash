@@ -53,7 +53,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.multidex:multidex:2.0.1'
-
+    implementation 'com.github.guilhe:screenshot:0.3.0'
     // Barcode model
     implementation 'com.google.mlkit:barcode-scanning:17.2.0'
     // Or comment the dependency above and uncomment the dependency below to

@@ -127,9 +127,6 @@ public class PoseGraphic extends Graphic {
     }
 
     if(poseAccuracy != ""){
-//      if(poseAccuracy.equals("Accurate Pose")) {
-//        drawNotice(canvas);
-//      }
         drawNotice(canvas,poseAccuracy);
     }
 
@@ -233,7 +230,6 @@ public class PoseGraphic extends Graphic {
   }
 
   void drawNotice(Canvas canvas,String poseAccuracy){
-    //String text = "你的动作很标准，请继续保持";
     String text = poseAccuracy;
 
     int viewWidth = canvas.getWidth();
@@ -241,19 +237,17 @@ public class PoseGraphic extends Graphic {
     Paint paint = new Paint();
     // 绘制透明底
     //canvas.drawColor(Color.parseColor("#80000000")); // 半透明黑色背景
-
+    if(poseAccuracy.equals("standard")){
+      paint.setColor(Color.parseColor("#A000FF00"));
+    }
+    else{
+      paint.setColor(Color.parseColor("#A0FF0000"));
+    }
     // 绘制白色小矩形
     int rectWidth = viewWidth;
     int rectHeight = 300;
     int rectX = 0;
     int rectY = 0;
-    if (text.equals("standard")){
-      paint.setColor(Color.parseColor("#A000FF00"));
-    }
-    else
-    {
-      paint.setColor(Color.parseColor("#A0FF0000"));
-    }
     canvas.drawRect(rectX, rectY, viewWidth, rectHeight, paint);
 
     // 绘制文字

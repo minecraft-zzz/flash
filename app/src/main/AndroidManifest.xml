@@ -54,28 +54,16 @@
         </activity>
 
         <activity
-            android:name=".java.LivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-        </activity>
-
-        <activity
             android:name=".java.CameraXLivePreviewActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity
-            android:name=".java.CameraXSourceDemoActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
+            android:name=".java.ResultActivity"
+            android:exported="false">
         </activity>
 
-        <activity
-            android:name=".java.StillImageActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-        </activity>
 
         <activity
             android:name=".preference.SettingsActivity"
