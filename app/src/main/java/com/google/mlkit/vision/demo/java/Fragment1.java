@@ -139,11 +139,18 @@ public class Fragment1 extends Fragment {
 
         File poseResultFolder = new File(requireContext().getFilesDir(), "pose_result_video");
         File recordedVideoFile = new File(poseResultFolder, "recorded_video.mp4");
-        // 指定视频文件的路径
-        String videoPath = recordedVideoFile.getAbsolutePath();
 
-        Uri uri = Uri.parse(videoPath);
-        videoView.setVideoURI(uri);
+        // 检查文件是否存在
+        if (recordedVideoFile.exists()) {
+            // 文件存在，使用文件路径
+            Uri uri = Uri.parse(recordedVideoFile.getAbsolutePath());
+            videoView.setVideoURI(uri);
+        } else {
+            // 文件不存在，使用raw资源
+            Uri uri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.a1);
+            videoView.setVideoURI(uri);
+        }
+
         videoView.start();
 
         originalText = chatTextView.getText().toString();
