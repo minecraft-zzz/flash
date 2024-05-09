@@ -55,6 +55,7 @@ public class PoseDetectorProcessor
   protected static class PoseWithClassification {
     private final Pose pose;
     private final List<String> classificationResult;
+
     private final String poseAccuracy;
 
     public PoseWithClassification(Pose pose, List<String> classificationResult,String poseAccuracy) {
@@ -71,10 +72,9 @@ public class PoseDetectorProcessor
       return classificationResult;
     }
 
+
     public String getPoseAccuracy() {return poseAccuracy;}
   }
-
-
 
   public PoseDetectorProcessor(
       Context context,

@@ -33,11 +33,13 @@ import com.google.mlkit.vision.pose.PoseLandmark;
 import java.util.List;
 import java.util.Locale;
 
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
 
 /** Draw the detected pose in preview. */
 public class PoseGraphic extends Graphic {
@@ -75,6 +77,7 @@ public class PoseGraphic extends Graphic {
     this.visualizeZ = visualizeZ;
     this.rescaleZForVisualization = rescaleZForVisualization;
     this.poseAccuracy  = poseAccuracy;
+
 
     this.poseClassification = poseClassification;
     classificationTextPaint = new Paint();
@@ -130,6 +133,7 @@ public class PoseGraphic extends Graphic {
         drawNotice(canvas,poseAccuracy);
         Log.e("poseGraphic","提示");
     }
+
 
     // Draw all the points
     for (PoseLandmark landmark : landmarks) {
@@ -226,6 +230,7 @@ public class PoseGraphic extends Graphic {
             whitePaint);
       }
     }
+
 
 
   }

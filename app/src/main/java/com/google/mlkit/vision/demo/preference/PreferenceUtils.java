@@ -125,12 +125,14 @@ public class PreferenceUtils {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
     boolean enableMultipleObjects =
+
         sharedPreferences.getBoolean(context.getString(prefKeyForMultipleObjects), false);
     boolean enableClassification =
         sharedPreferences.getBoolean(context.getString(prefKeyForClassification), true);
 
     ObjectDetectorOptions.Builder builder =
         new ObjectDetectorOptions.Builder().setDetectorMode(mode);
+
     if (enableMultipleObjects) {
       builder.enableMultipleObjects();
     }
@@ -224,6 +226,7 @@ public class PreferenceUtils {
             .setClassificationMode(classificationMode)
             .setPerformanceMode(performanceMode)
             .setMinFaceSize(minFaceSize);
+
     if (enableFaceTracking) {
       optionsBuilder.enableTracking();
     }
@@ -313,6 +316,7 @@ public class PreferenceUtils {
   public static boolean shouldShowPoseDetectionInFrameLikelihoodLivePreview(Context context) {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     String prefKey =
+
         context.getString(R.string.pref_key_live_preview_pose_detector_show_in_frame_likelihood);
     return sharedPreferences.getBoolean(prefKey, true);
   }

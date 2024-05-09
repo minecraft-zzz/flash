@@ -33,6 +33,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
+import android.content.Intent;
+import android.os.Build.VERSION_CODES;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
+import android.util.Size;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -60,7 +66,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.google.android.gms.common.annotation.KeepName;
+
 import com.google.mlkit.common.MlKitException;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.common.MlKitException;
+import com.google.mlkit.common.model.LocalModel;
+import com.google.mlkit.vision.barcode.ZoomSuggestionOptions.ZoomCallback;
+
 import com.google.mlkit.vision.demo.CameraXViewModel;
 import com.google.mlkit.vision.demo.GraphicOverlay;
 import com.google.mlkit.vision.demo.R;
@@ -68,11 +81,23 @@ import com.google.mlkit.vision.demo.VisionImageProcessor;
 import com.google.mlkit.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.google.mlkit.vision.demo.preference.PreferenceUtils;
 import com.google.mlkit.vision.demo.preference.SettingsActivity;
+
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
+import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions;
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions;
+import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
+import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions;
+import com.google.mlkit.vision.text.devanagari.DevanagariTextRecognizerOptions;
+import com.google.mlkit.vision.text.japanese.JapaneseTextRecognizerOptions;
+import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +151,6 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
       // 处理停止事件
     }
   };
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +210,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
               SettingsActivity.LaunchSource.CAMERAX_LIVE_PREVIEW);
           startActivity(intent);
         });
+
 
     Button stopButton = findViewById(R.id.stop_button);
     stopButton.setOnClickListener(
@@ -266,7 +291,6 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
   public void onDestroy() {
     super.onDestroy();
       stopScreenRecording();
-
     if (imageProcessor != null) {
       imageProcessor.stop();
     }
@@ -294,6 +318,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
       bindAnalysisUseCase();
     }
   }
+
 
   private void clearFolder(File folder) {
     File start = new File(folder, "startTime.txt");
@@ -333,7 +358,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
       }
     }
   }
-  
+
   private void bindPreviewUseCase() {
     if (!PreferenceUtils.isCameraLiveViewportEnabled(this)) {
       return;

@@ -50,10 +50,11 @@ public class ResultActivity extends AppCompatActivity {
         time.setText(dynamicText);
 
 
-        File poseResultFolder = new File(getFilesDir(), "pose_result_video");
+
 
         videoView = findViewById(R.id.video_view);
 
+        File poseResultFolder = new File(getFilesDir(), "pose_result_video");
         File recordedVideoFile = new File(poseResultFolder, "recorded_video.mp4");
         // 指定视频文件的路径
         String videoPath = recordedVideoFile.getAbsolutePath();

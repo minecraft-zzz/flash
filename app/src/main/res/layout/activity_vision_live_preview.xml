@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
+
   <com.google.mlkit.vision.demo.CameraSourcePreview
       android:id="@+id/preview_view"
       android:layout_width="match_parent"
@@ -48,13 +49,52 @@
         android:textOff=""
         android:textOn=""/>
 
-    <Spinner
-        android:id="@+id/spinner"
+
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"/>-->
+
+<!--  </LinearLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tabMode="scrollable">
+
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <TextView
+        android:id="@+id/textObjectDetection"
         android:layout_width="0dp"
+        android:layout_height="41dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="目标检测" />
+
+    <TextView
+        android:id="@+id/textPoseDetection"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="FlashLight-AI健身-深蹲计数" />
+
+    <!-- Add other TextViews for different models -->
 
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

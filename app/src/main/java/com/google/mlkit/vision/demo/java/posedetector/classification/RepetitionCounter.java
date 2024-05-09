@@ -22,8 +22,10 @@ package com.google.mlkit.vision.demo.java.posedetector.classification;
 public class RepetitionCounter {
   // These thresholds can be tuned in conjunction with the Top K values in {@link PoseClassifier}.
   // The default Top K value is 10 so the range here is [0-10].
+
   private static final float DEFAULT_ENTER_THRESHOLD = 8f;
   private static final float DEFAULT_EXIT_THRESHOLD = 7f;
+
 
   private final String className;
   private final float enterThreshold;

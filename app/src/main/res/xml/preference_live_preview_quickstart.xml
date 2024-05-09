@@ -45,6 +45,7 @@
         android:title="@string/pref_title_info_hide"/>
   </PreferenceCategory>
 
+
   <PreferenceCategory android:title="@string/pref_category_barcode_scanning">
 
     <SwitchPreference
@@ -112,8 +113,10 @@
         android:entryValues="@array/pref_entry_values_face_detector_contour_mode"
         android:key="@string/pref_key_live_preview_face_detection_contour_mode"
         android:persistent="true"
+
         android:title="@string/pref_title_face_detector_contour_mode"
         android:summary="%s"/>
+
 
     <ListPreference
         android:defaultValue="@string/pref_entry_values_face_detector_classification_mode_no_classifications"
@@ -121,8 +124,10 @@
         android:entryValues="@array/pref_entry_values_face_detector_classification_mode"
         android:key="@string/pref_key_live_preview_face_detection_classification_mode"
         android:persistent="true"
+
         android:title="@string/pref_title_face_detector_classification_mode"
         android:summary="%s"/>
+
 
     <ListPreference
         android:defaultValue="@string/pref_entry_values_face_detector_performance_mode_fast"
@@ -130,8 +135,10 @@
         android:entryValues="@array/pref_entry_values_face_detector_performance_mode"
         android:key="@string/pref_key_live_preview_face_detection_performance_mode"
         android:persistent="true"
+
         android:title="@string/pref_title_face_detector_performance_mode"
         android:summary="%s"/>
+
 
     <SwitchPreference
         android:defaultValue="false"
@@ -156,12 +163,14 @@
         android:persistent="true"
         android:title="@string/pref_title_pose_detector_performance_mode"
         android:summary="%s"/>
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_key_pose_detector_prefer_gpu"
         android:persistent="true"
         android:title="@string/pref_title_pose_detector_prefer_gpu"
         android:summary="@string/pref_summary_pose_detector_prefer_gpu"/>
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_key_live_preview_pose_detector_show_in_frame_likelihood"
@@ -192,15 +201,6 @@
         android:persistent="true"
         android:title="@string/pref_title_segmentation_raw_size_mask"/>
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/pref_group_title_face_mesh">
-    <ListPreference
-        android:key="@string/pref_key_face_mesh_use_case"
-        android:persistent="true"
-        android:title="@string/pref_title_face_mesh_use_case"
-        android:defaultValue="1"
-        android:entries="@array/pref_entry_titles_face_mesh_use_case"
-        android:entryValues="@array/pref_entry_values_face_mesh_use_case"
-        android:summary="%s"/>
-  </PreferenceCategory>
+
 
 </PreferenceScreen>

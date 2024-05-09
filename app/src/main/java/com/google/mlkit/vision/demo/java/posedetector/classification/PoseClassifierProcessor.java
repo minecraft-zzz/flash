@@ -37,13 +37,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+
 /**
  * Accepts a stream of {@link Pose} for classification and Rep counting.
  */
 public class PoseClassifierProcessor {
   private static final String TAG = "PoseClassifierProcessor";
   private static final String POSE_SAMPLES_FILE = "pose/fitness_pose_samples.csv";
+
   private static final String POSE_ACCURACY_SAMPLES_FILE = "pose/squat_accuracy_csv_out.csv";
+
 
   // Specify classes for which we want rep counting.
   // These are the labels in the given {@code POSE_SAMPLES_FILE}. You can set your own class labels
@@ -59,6 +68,7 @@ public class PoseClassifierProcessor {
   private EMASmoothing emaSmoothing;
   private List<RepetitionCounter> repCounters;
   private PoseClassifier poseClassifier;
+
   private PoseAccuracyClassifier poseAccuracyClassifier;
   private String lastRepResult;
 
@@ -71,6 +81,8 @@ public class PoseClassifierProcessor {
   private long startTime;
   private String retPose;
   private Context mcontext;
+
+
 
   @WorkerThread
   public PoseClassifierProcessor(Context context, boolean isStreamMode) {
@@ -108,6 +120,7 @@ public class PoseClassifierProcessor {
     } catch (IOException e) {
       Log.e(TAG, "Error when loading pose samples.\n" + e);
     }
+
     try {
       BufferedReader reader = new BufferedReader(
               new InputStreamReader(context.getAssets().open(POSE_ACCURACY_SAMPLES_FILE)));
@@ -125,6 +138,7 @@ public class PoseClassifierProcessor {
     }
     poseClassifier = new PoseClassifier(poseSamples);
     poseAccuracyClassifier = new PoseAccuracyClassifier(poseAccuracySamples);
+    poseClassifier = new PoseClassifier(poseSamples);
     if (isStreamMode) {
       for (String className : POSE_CLASSES) {
         repCounters.add(new RepetitionCounter(className));
@@ -195,6 +209,7 @@ public class PoseClassifierProcessor {
 //    result.add(maxConfidenceClassResult);
     return result;
   }
+
 
   @WorkerThread
   public String getPoseAccuracy(Pose pose,double conf){
@@ -369,5 +384,4 @@ public class PoseClassifierProcessor {
       return String.format("%02d秒", seconds);
     }
   }
-
 }
