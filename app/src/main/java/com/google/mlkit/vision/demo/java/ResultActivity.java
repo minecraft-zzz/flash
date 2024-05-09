@@ -2,20 +2,26 @@ package com.google.mlkit.vision.demo.java;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.mlkit.vision.demo.R;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
+import android.widget.SeekBar;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -52,34 +58,55 @@ public class ResultActivity extends AppCompatActivity {
         // 指定视频文件的路径
         String videoPath = recordedVideoFile.getAbsolutePath();
 
-        // 为视频播放器设置路径并开始播放
-        playVideo(videoPath);
+        Uri uri = Uri.parse(videoPath);
+        videoView.setVideoURI(uri);
+        videoView.start();
 
-
+        Log.e("aaa","展示");
 
         TextView noticeTextView = findViewById(R.id.notice_text_view);
 
-        String noticeText = "bbb";
-        // 创建一个 StringBuilder 对象来保存文件名
-        StringBuilder stringBuilder = new StringBuilder();
-// 检查文件夹是否存在
-        if (poseResultFolder.exists() && poseResultFolder.isDirectory()) {
-            noticeText = "这aaa";
-            // 获取pose_result文件夹中的所有文件
-            File[] files = poseResultFolder.listFiles();
-            // 遍历所有文件，并将文件名添加到 stringBuilder 中
-            for (File file : files) {
-                if (file.isFile()) {
-                    stringBuilder.append(file.getName()).append("\n");
-                }
+
+//        // 创建一个 StringBuilder 对象来保存文件名
+//        StringBuilder stringBuilder = new StringBuilder();
+//// 检查文件夹是否存在
+//        if (poseResultFolder.exists() && poseResultFolder.isDirectory()) {
+//            // 获取pose_result文件夹中的所有文件
+//            File[] files = poseResultFolder.listFiles();
+//            // 遍历所有文件，并将文件名添加到 stringBuilder 中
+//            for (File file : files) {
+//                if (file.isFile()) {
+//                    stringBuilder.append(file.getName()).append("\n");
+//                }
+//            }
+//        }
+//
+//            // 将 stringBuilder 中的内容转换为字符串
+//        String fileList = stringBuilder.toString();
+//        // 设置文本内容
+//        noticeTextView.setText(fileList);
+
+        String noticeText = "所有动作都非常标准！";
+        File file = new File(getFilesDir(), "/pose_result/advice.txt");
+        try {
+            // 如果文件不存在，则创建新文件
+            if (file.exists()) {
+                FileInputStream fis = new FileInputStream(file);
+                // 创建字节数组，用于存储文件内容
+                byte[] bytes = new byte[(int) file.length()];
+                // 读取文件内容到字节数组中
+                fis.read(bytes);
+                // 关闭文件输入流
+                fis.close();
+                // 将字节数组转换为字符串
+                noticeText = new String(bytes);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 处理文件操作异常
         }
 
-            // 将 stringBuilder 中的内容转换为字符串
-        String fileList = stringBuilder.toString();
-        // 设置文本内容
-        noticeTextView.setText(fileList);
-
+        noticeTextView.setText(noticeText);
 
 
     }

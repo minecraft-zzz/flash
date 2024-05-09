@@ -16,25 +16,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- 视频播放器 -->
-    <VideoView
-        android:id="@+id/video_view"
+    <!-- 视频播放器和进度条 -->
+    <LinearLayout
+        android:id="@+id/video_player_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/text_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
 
+    </LinearLayout>
 
     <!-- 另一个文字展示框 -->
     <TextView
         android:id="@+id/notice_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_vertical|start"
         android:text="这里是另一个文字展示框"
-        app:layout_constraintTop_toBottomOf="@id/video_view"
+        app:layout_constraintTop_toBottomOf="@id/video_player_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

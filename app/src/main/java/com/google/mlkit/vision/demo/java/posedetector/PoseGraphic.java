@@ -230,7 +230,18 @@ public class PoseGraphic extends Graphic {
   }
 
   void drawNotice(Canvas canvas,String poseAccuracy){
-    String text = poseAccuracy;
+    String text = "default";
+    switch (poseAccuracy){
+      case "standard": text = "动作标准，请继续保持"; break;
+      case "down_hand_wrong": text = "下蹲时手臂未合拢"; break;
+      case "down_in": text = "膝盖内扣"; break;
+      case "down_out": text = "膝盖外扣"; break;
+      case "half_hand_wrong": text = "下蹲过程中手臂未合拢"; break;
+      case "half_in": text = "下蹲过程中膝盖内扣"; break;
+      case "half_out": text = "下蹲过程中膝盖外扣"; break;
+      default: break;
+    }
+
 
     int viewWidth = canvas.getWidth();
     int viewHeight = canvas.getHeight();

@@ -25,6 +25,9 @@ import androidx.annotation.WorkerThread;
 import com.google.common.base.Preconditions;
 import com.google.mlkit.vision.pose.Pose;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -66,6 +69,7 @@ public class PoseClassifierProcessor {
   private static final int detectFrames = 10;
   private long startTime;
   private String retPose;
+  private Context mcontext;
 
   @WorkerThread
   public PoseClassifierProcessor(Context context, boolean isStreamMode) {
@@ -81,6 +85,7 @@ public class PoseClassifierProcessor {
     poseAccuracy = new ArrayList<>();
     startTime = System.currentTimeMillis();
     retPose = "";
+    mcontext = context;
     loadPoseSamples(context);
   }
 
@@ -203,8 +208,9 @@ public class PoseClassifierProcessor {
         residualFrames--;
         String poseForThisFrame = poseAccuracyClassifier.getPoseAccuracy(pose);
         poseAccuracy.add(poseForThisFrame);
+        Log.e(TAG,"完成动作准确度分类");
         if (!poseForThisFrame.equals("standard")){
-
+          outputWrongPose(poseForThisFrame);
         }
       }
       else if (residualFrames == 0){
@@ -222,6 +228,62 @@ public class PoseClassifierProcessor {
     return retPose;
   }
 
+  public void outputWrongPose(String pose){
+    long startTime = readTimestampFromFile();
+
+    // 计算与当前时间的差值
+    long currentTime = System.currentTimeMillis();
+    long elapsedTime = currentTime - startTime;
+
+    // 将时间戳转换为 hh:mm:ss 格式的时间
+    String formattedTime = convertMillisToTimeString(elapsedTime);
+
+    String text = "default";
+    switch (pose){
+      case "down_hand_wrong": text = "下蹲时手臂未合拢"; break;
+      case "down_in": text = "膝盖内扣"; break;
+      case "down_out": text = "膝盖外扣"; break;
+      case "half_hand_wrong": text = "下蹲过程中手臂未合拢"; break;
+      case "half_in": text = "下蹲过程中膝盖内扣"; break;
+      case "half_out": text = "下蹲过程中膝盖外扣"; break;
+      default: break;
+    }
+
+    String advice = "null";
+    switch (pose){
+      case "down_hand_wrong": advice = "双手自然合拢,放松肩部，有助于稳定身体平衡，减少压力。"; break;
+      case "down_in": advice = "确保膝盖与脚尖方向一致，避免内扣，减少膝盖受力，保护关节。"; break;
+      case "down_out": advice = "保持膝盖与脚尖轻微外扣，有助于稳定下蹲姿势，减少膝盖压力，降低受伤风险。"; break;
+      case "half_hand_wrong": advice = "双手自然合拢，放置在胸前或上半身，有助于保持平衡，加强核心稳定性。"; break;
+      case "half_in": advice = "注意膝盖与脚尖方向，避免内扣，保持对齐，降低膝盖压力，减少不适。"; break;
+      case "half_out": advice = "确保膝盖与脚尖轻微外扣，保持稳定姿势，减少膝盖受力，降低受伤风险。"; break;
+      default: break;
+    }
+
+    String outputTime = "在" + formattedTime + "时出现" + text + "\n";
+    String outputAdcive = "AI建议：" + advice + "\n";
+    String output = outputTime + outputAdcive;
+
+    File file = new File(mcontext.getFilesDir(), "/pose_result/advice.txt");
+
+    try {
+      // 如果文件不存在，则创建新文件
+      if (!file.exists()) {
+        file.createNewFile();
+      }
+
+      // 将字符串写入文件
+      FileWriter writer = new FileWriter(file);
+      writer.write(output);
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+      // 处理文件操作异常
+    }
+
+
+  }
 
   public static String getMostCommonElement(List<String> list) {
     // 创建一个 HashMap 来统计每个字符串出现的次数
@@ -259,4 +321,48 @@ public class PoseClassifierProcessor {
     float time = (float) ((now - start) / 1000.0);
     return time > duration;
   }
+
+  private long readTimestampFromFile() {
+    BufferedReader reader = null;
+    try {
+      // 创建文件对象
+      File file = new File(mcontext.getFilesDir(), "pose_result/startTime.txt");
+
+      // 创建文件读取器
+      reader = new BufferedReader(new FileReader(file));
+
+      // 读取文件中的时间戳
+      String timestampString = reader.readLine();
+      return Long.parseLong(timestampString);
+    } catch (IOException e) {
+      e.printStackTrace();
+      return -1; // 读取失败，返回 -1 表示错误
+    } finally {
+      // 关闭读取器
+      if (reader != null) {
+        try {
+          reader.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  private static String convertMillisToTimeString(long millis) {
+    // 计算小时、分钟和秒
+    long hours = millis / 3600000;
+    long minutes = (millis % 3600000) / 60000;
+    long seconds = ((millis % 3600000) % 60000) / 1000;
+
+    // 格式化为 "hh:mm:ss"、"mm:ss" 或 "ss" 格式的字符串
+    if (hours > 0) {
+      return String.format("%02d时%02d分%02秒", hours, minutes, seconds);
+    } else if (minutes > 0) {
+      return String.format("%02d分%02d秒", minutes, seconds);
+    } else {
+      return String.format("%02d秒", seconds);
+    }
+  }
+
 }
