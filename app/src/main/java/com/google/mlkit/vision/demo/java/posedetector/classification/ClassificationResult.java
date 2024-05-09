@@ -16,8 +16,21 @@
 
 package com.google.mlkit.vision.demo.java.posedetector.classification;
 
+
 import java.util.HashMap;
 import java.util.Map;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
 import java.util.Set;
 
 import static java.util.Collections.max;
@@ -49,6 +62,29 @@ public class ClassificationResult {
         (entry1, entry2) -> (int) (entry1.getValue() - entry2.getValue()))
         .getKey();
   }
+
+
+  public String getMaxConfidenceClasses(){
+    List<String> maxClasses = new ArrayList<>();
+    double maxValue = Double.MIN_VALUE;
+
+    for (Map.Entry<String, Float> entry : classConfidences.entrySet()) {
+      double value = entry.getValue();
+      if (value > maxValue) {
+        maxClasses.clear(); // 清空列表
+        maxClasses.add(entry.getKey());
+        maxValue = value;
+      } else if (value == maxValue) {
+        maxClasses.add(entry.getKey());
+      }
+    }
+
+    // 从具有最大值的键列表中随机选择一个
+    Random random = new Random();
+    int randomIndex = random.nextInt(maxClasses.size());
+    return maxClasses.get(randomIndex);
+  }
+
 
   public void incrementClassConfidence(String className) {
     classConfidences.put(className,

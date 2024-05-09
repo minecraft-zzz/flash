@@ -51,39 +51,39 @@ public class AddActivity extends BaseActivity {
     private class VideoAdapter extends BaseAdapter {
         private Context mContext;
         private String mSelectedItem = "a";
-        private int mVideoCount = 1;
+        private int mVideoCount = 18;
         public VideoAdapter(Context context) {
             mContext = context;
         }
         private void updateVideoCount() {
             // 根据字母确定视频数量的逻辑
             // 这里假设您有一种方法可以确定每个字母对应的视频数量
-            //            switch (mSelectedItem) {
-//                case "a":
-//                    mVideoCount = 18;
-//
-//                    break;
-//                case "b":
-//                case "e":
-//                    mVideoCount = 16;
-//                    break;
-//                case "c":
-//                    mVideoCount = 14;
-//                    break;
-//                case "d":
-//                    mVideoCount = 29;
-//                    break;
-//                case "f":
-//                    mVideoCount = 12;
-//                    break;
-//                case "g":
-//                    mVideoCount = 7;
-//                    break;
-//                default:
-//                    mVideoCount = 0; // 默认情况下没有视频
-//                    break;
-//            }
-            mVideoCount = 1;
+                        switch (mSelectedItem) {
+                case "a":
+                    mVideoCount = 18;
+
+                    break;
+                case "b":
+                case "e":
+                    mVideoCount = 16;
+                    break;
+                case "c":
+                    mVideoCount = 14;
+                    break;
+                case "d":
+                    mVideoCount = 29;
+                    break;
+                case "f":
+                    mVideoCount = 12;
+                    break;
+                case "g":
+                    mVideoCount = 7;
+                    break;
+                default:
+                    mVideoCount = 0; // 默认情况下没有视频
+                    break;
+            }
+
         }
         @Override
         public int getCount() {

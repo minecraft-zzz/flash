@@ -2,7 +2,9 @@ package com.google.mlkit.vision.demo.java;
 
 import android.content.Intent;
 import android.net.Uri;
+
 import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,9 +12,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.google.mlkit.vision.demo.R;
@@ -21,9 +29,11 @@ import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 
+
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 
 public class Activity_action extends BaseActivity {
     private static final String TAG = "Activity_action";
@@ -41,11 +51,13 @@ public class Activity_action extends BaseActivity {
         mListView = findViewById(R.id.muscle_list);
 
         // Set adapter
+
         String[] data1 = {"胸", "肩", "背", "臀腿", "手臂", "核心", "综合"};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data1);
         mListView.setAdapter(adapter1);
 
         String[] data = {"a", "b", "c", "d", "e", "f", "g"};
+
         // Find GridView
         mGridView = findViewById(R.id.exercise_list);
 
@@ -64,6 +76,7 @@ public class Activity_action extends BaseActivity {
             }
         });
 
+
         LinearLayout homeNav = findViewById(R.id.home);
         LinearLayout diaryNav = findViewById(R.id.diary);
         LinearLayout profileNav = findViewById(R.id.person);
@@ -77,6 +90,7 @@ public class Activity_action extends BaseActivity {
                 Intent intent = new Intent(Activity_action.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+
             }
         });
 
@@ -98,6 +112,7 @@ public class Activity_action extends BaseActivity {
             }
         });
     }
+
 
     private static class VideoLoadTask implements Runnable {
         private final WeakReference<Activity_action> activityRef;
@@ -142,12 +157,14 @@ public class Activity_action extends BaseActivity {
     private class VideoAdapter extends BaseAdapter {
         private Context mContext;
         private String mSelectedItem = "a";
-        private int mVideoCount = 1; // 默认每个字母对应的视频数量
+        private int mVideoCount = 18; // 默认每个字母对应的视频数量
         private final Executor executor = Executors.newSingleThreadExecutor();
+
 
         public VideoAdapter(Context context) {
             mContext = context;
         }
+
 
         // 设置选定的字母
         public void setSelectedItem(String selectedItem) {
@@ -160,36 +177,38 @@ public class Activity_action extends BaseActivity {
         private void updateVideoCount() {
             // 根据字母确定视频数量的逻辑
             // 这里假设您有一种方法可以确定每个字母对应的视频数量
-//            switch (mSelectedItem) {
-//                case "a":
-//                    mVideoCount = 18;
-//
-//                    break;
-//                case "b":
-//                case "e":
-//                    mVideoCount = 16;
-//                    break;
-//                case "c":
-//                    mVideoCount = 14;
-//                    break;
-//                case "d":
-//                    mVideoCount = 29;
-//                    break;
-//                case "f":
-//                    mVideoCount = 12;
-//                    break;
-//                case "g":
-//                    mVideoCount = 7;
-//                    break;
-//                default:
-//                    mVideoCount = 0; // 默认情况下没有视频
-//                    break;
-//            }
-            mVideoCount = 1;
+            switch (mSelectedItem) {
+                case "a":
+                    mVideoCount = 18;
+
+                    break;
+                case "b":
+                case "e":
+                    mVideoCount = 16;
+                    break;
+                case "c":
+                    mVideoCount = 14;
+                    break;
+                case "d":
+                    mVideoCount = 29;
+                    break;
+                case "f":
+                    mVideoCount = 12;
+                    break;
+                case "g":
+                    mVideoCount = 7;
+                    break;
+                default:
+                    mVideoCount = 0; // 默认情况下没有视频
+                    break;
+            }
+
+
         }
 
         @Override
         public int getCount() {
+
             return mVideoCount;
         }
 
@@ -204,6 +223,7 @@ public class Activity_action extends BaseActivity {
         }
 
         @Override
+
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
@@ -241,3 +261,4 @@ public class Activity_action extends BaseActivity {
         }
     }
 }
+

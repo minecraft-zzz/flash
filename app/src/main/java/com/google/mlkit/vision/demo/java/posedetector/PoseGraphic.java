@@ -16,6 +16,7 @@
 
 package com.google.mlkit.vision.demo.java.posedetector;
 
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -31,6 +32,14 @@ import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;
 import java.util.List;
 import java.util.Locale;
+
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+
 
 /** Draw the detected pose in preview. */
 public class PoseGraphic extends Graphic {
@@ -48,6 +57,9 @@ public class PoseGraphic extends Graphic {
   private float zMax = Float.MIN_VALUE;
 
   private final List<String> poseClassification;
+
+  private final String poseAccuracy;
+
   private final Paint classificationTextPaint;
   private final Paint leftPaint;
   private final Paint rightPaint;
@@ -59,12 +71,17 @@ public class PoseGraphic extends Graphic {
       boolean showInFrameLikelihood,
       boolean visualizeZ,
       boolean rescaleZForVisualization,
-      List<String> poseClassification) {
+
+      List<String> poseClassification,
+      String poseAccuracy) {
+
     super(overlay);
     this.pose = pose;
     this.showInFrameLikelihood = showInFrameLikelihood;
     this.visualizeZ = visualizeZ;
     this.rescaleZForVisualization = rescaleZForVisualization;
+
+    this.poseAccuracy  = poseAccuracy;
 
     this.poseClassification = poseClassification;
     classificationTextPaint = new Paint();
@@ -105,6 +122,22 @@ public class PoseGraphic extends Graphic {
               - POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size() - i));
       canvas.drawText(
               poseClassification.get(i), classificationX, classificationY, classificationTextPaint);
+
+//      if( i == poseClassification.size() - 1){
+//        String[] parts = poseClassification.get(i).split(":");
+//        //Log.w("parts",parts[0]);
+//        double conf = Double.parseDouble(parts[1].trim().split(" ")[0]);
+//        //showPopText(conf);
+//        if(parts[0].equals("squats_down ") && conf > 0.9 ){
+//          drawNotice(canvas);
+//        }
+//      }
+    }
+
+    if(poseAccuracy != ""){
+        drawNotice(canvas,poseAccuracy);
+        Log.e("poseGraphic","提示");
+
     }
 
 
@@ -203,7 +236,54 @@ public class PoseGraphic extends Graphic {
             whitePaint);
       }
     }
+
+
+
+
   }
+
+  void drawNotice(Canvas canvas,String poseAccuracy){
+    String text = "default";
+    switch (poseAccuracy){
+      case "standard": text = "动作标准，请继续保持"; break;
+      case "down_hand_wrong": text = "下蹲时手臂未合拢"; break;
+      case "down_in": text = "膝盖内扣"; break;
+      case "down_out": text = "膝盖外扣"; break;
+      case "half_hand_wrong": text = "下蹲过程中手臂未合拢"; break;
+      case "half_in": text = "下蹲过程中膝盖内扣"; break;
+      case "half_out": text = "下蹲过程中膝盖外扣"; break;
+      default: break;
+    }
+
+
+    int viewWidth = canvas.getWidth();
+    int viewHeight = canvas.getHeight();
+    Paint paint = new Paint();
+    // 绘制透明底
+    //canvas.drawColor(Color.parseColor("#80000000")); // 半透明黑色背景
+    if(poseAccuracy.equals("standard")){
+      paint.setColor(Color.parseColor("#A000FF00"));
+    }
+    else{
+      paint.setColor(Color.parseColor("#A0FF0000"));
+    }
+    // 绘制白色小矩形
+    int rectWidth = viewWidth;
+    int rectHeight = 300;
+    int rectX = 0;
+    int rectY = 0;
+    canvas.drawRect(rectX, rectY, viewWidth, rectHeight, paint);
+
+    // 绘制文字
+    paint.setColor(Color.BLACK);
+    paint.setTextSize(60);
+    float textWidth = paint.measureText(text); // 获取文字的宽度
+    float textX = rectX + (rectWidth - textWidth) / 2; // 计算文字的 x 坐标，使其居中显示在矩形内部
+    float textY = rectY + rectHeight / 2 + 15; // 计算文字的 y 坐标，使其居中显示在矩形内部
+    canvas.drawText(text, textX, textY, paint);
+  }
+
+
 
   void drawPoint(Canvas canvas, PoseLandmark landmark, Paint paint) {
     PointF3D point = landmark.getPosition3D();

@@ -9,43 +9,85 @@
     android:background="@drawable/gradient_background"
     tools:context=".java.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal">
 
-    <TextView
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="账号:"
+            android:layout_marginLeft= "15dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="密码："
+            android:layout_marginLeft= "15dp"
+            android:textSize="20sp"
+
+            />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            />
+    </LinearLayout>
+
+
+    <Button
+        android:layout_marginTop="50dp"
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:onClick="login"
+        />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="reg"
+        android:text="注册" />
+
+
+    <Switch
+        android:id="@+id/switchMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ZHT"
-        android:layout_gravity="center"
-        />
-    <EditText
-        android:id="@+id/et_1"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:hint="用户名"
-        android:maxLines="1"
-        android:padding="5dp"
-        />
-    <EditText
-        android:id="@+id/et_2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:hint="密码"
-        android:maxLines="1"
-        android:inputType="textPassword"
-        android:padding="5dp"
-        />
+        android:text="夜间模式"
+        android:paddingVertical="8dp"
+        android:checked="false" />
 
-
-    <!--    <Switch-->
-    <!--        android:id="@+id/switchMode"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="夜间模式"-->
-    <!--        android:paddingVertical="8dp"-->
-    <!--        android:checked="false" />-->
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -174,14 +216,8 @@
             android:src="@drawable/baseline_add_24"
             android:background="@drawable/gradient_button_color"/>
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="登录"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            />
+
+
 
     </RelativeLayout>
 

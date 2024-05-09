@@ -34,12 +34,21 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp" >
 
-                <ImageView
-                    android:id="@+id/imageView"
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/img" />-->
+                <VideoView
+                    android:id="@+id/video_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img" />
+                    app:layout_constraintTop_toBottomOf="@id/text_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -70,7 +79,10 @@
                         android:gravity="center"
                         android:text="Hello,this is Chatgpt.\nHow can I assist you today?"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:clickable="true"
+                        android:onClick="onTextViewClicked"/>
+
                 </FrameLayout>
 
             </androidx.cardview.widget.CardView>
@@ -113,7 +125,9 @@
                     android:textColor="@color/gray"
                     android:layout_gravity="center_vertical"
                     android:clickable="true"
-                    android:focusable="true"/>
+
+                    android:focusable="true"
+                    android:onClick="onViewMoreClicked"/>
             </LinearLayout>
 
 

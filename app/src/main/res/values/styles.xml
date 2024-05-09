@@ -52,9 +52,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+
     <style name="SpecialDateStyle">
         <item name="android:textColor">@color/red</item>
         <!-- 其他日期样式设置 -->
     </style>
+
 
 </resources>

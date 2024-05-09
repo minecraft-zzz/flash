@@ -30,6 +30,7 @@ public class diary_new extends Activity {
     private VideoAdapter mAdapter;
     private static final int REQUEST_CODE_ADD_ACTIVITY = 1001; // Request code for AddActivity
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class diary_new extends Activity {
             public void onClick(View v) {
                 // Get the entered title from the user
                 String enteredTitle = title.getText().toString(); // Use title EditText
+
 
                 EditText contentEditText = findViewById(R.id.editText);
                 String enteredContent = contentEditText.getText().toString();

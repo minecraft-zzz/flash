@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +9,7 @@
     android:paddingTop="8dp"
     android:orientation="vertical"
     android:background="@drawable/gradient_background"
+
     tools:context=".java.Activity_diary">
 
 
@@ -185,3 +188,4 @@
 
 
 </RelativeLayout>
+

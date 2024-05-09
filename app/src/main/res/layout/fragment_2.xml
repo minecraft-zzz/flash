@@ -6,6 +6,24 @@
     tools:context=".java.Fragment2">
 
 
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Video Player"
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"/>
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:padding="10dp"
+        android:gravity="center"/>
 
 
 </FrameLayout>

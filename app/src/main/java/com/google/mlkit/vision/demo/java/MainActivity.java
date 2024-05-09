@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 // 点击 "日记" 导航项，启动相应的 Activity
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                Intent intent = new Intent(MainActivity.this, CameraXLivePreviewActivity.class);
                 startActivity(intent);
             }
         });

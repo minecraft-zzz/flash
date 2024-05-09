@@ -1,5 +1,6 @@
 package com.google.mlkit.vision.demo.java;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.CalendarView;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatDelegate;
+
+import com.google.mlkit.vision.demo.R;
+
 public class Activity_diary extends BaseActivity {
 
     private TextView titleTextView;
@@ -36,6 +54,7 @@ public class Activity_diary extends BaseActivity {
     private int lastSelectedYear;
     private int lastSelectedMonth;
     private int lastSelectedDay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +62,19 @@ public class Activity_diary extends BaseActivity {
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
+
         LinearLayout homeNav = findViewById(R.id.home);
         LinearLayout libraryNav = findViewById(R.id.action);
         LinearLayout profileNav = findViewById(R.id.person);
         CalendarView calendarView = findViewById(R.id.calendarView);
+
 
         GridView mGridView = findViewById(R.id.gridView);
 
         // Create and set adapter
         mAdapter = new VideoAdapter(this);
         mGridView.setAdapter(mAdapter);
+
 
         titleTextView = findViewById(R.id.title); // 找到用于显示标题的 TextView
         contentTextView = findViewById(R.id.textview); // 找到用于显示内容的 TextView
@@ -65,6 +87,7 @@ public class Activity_diary extends BaseActivity {
         if (intent != null) {
             String receivedTitle = intent.getStringExtra("title");
             String receivedContent = intent.getStringExtra("content");
+
             ArrayList<Integer> videoResourceIds = intent.getIntegerArrayListExtra("videoResourceIds");
             ArrayList<String> videoNames = intent.getStringArrayListExtra("videoNames");
             ArrayList<Integer> groupNumbers = intent.getIntegerArrayListExtra("groupNumbers"); // 接收组号列表
@@ -166,6 +189,7 @@ public class Activity_diary extends BaseActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
+
         homeNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +199,7 @@ public class Activity_diary extends BaseActivity {
                 finish();
             }
         });
+
         libraryNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +209,7 @@ public class Activity_diary extends BaseActivity {
                 finish();
             }
         });
+
         profileNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,6 +220,7 @@ public class Activity_diary extends BaseActivity {
             }
         });
     }
+
     private static class VideoAdapter extends BaseAdapter {
         private final Context mContext;
         private ArrayList<Integer> mVideoResourceIds;

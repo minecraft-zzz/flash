@@ -21,12 +21,29 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
+
+
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:icon="@drawable/flash"
         android:label="Flash健身"
         android:theme="@style/AppTheme">
+
+
+        <service
+            android:name=".java.MediaProjectionForegroundService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaProjection" ></service>
+
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -42,10 +59,21 @@
             android:name=".EntryActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
+
+
+        </activity>
+        <activity
+            android:name=".java.ChatActivity"
+            android:exported="true">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN"/>-->
+
 <!--                <category android:name="android.intent.category.LAUNCHER"/>-->
 <!--            </intent-filter>-->
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value=""/>
+
         </activity>
 
         <activity
@@ -70,6 +98,14 @@
             android:name=".java.Activity_person"
             android:exported="true" />
         <activity
+
+            android:name=".java.RegisterActivity"
+            android:exported="true" />
+        <activity
+            android:name=".java.PersonalInfoActivity"
+            android:exported="true" />
+        <activity
+
             android:name=".java.Activity_action"
             android:exported="true" />
         <activity
@@ -79,6 +115,7 @@
             android:name=".java.diary_new"
             android:exported="true" />
 
+
         <activity
             android:name=".java.VideoDetailsActivity"
             android:exported="true" />
@@ -86,6 +123,7 @@
         <activity
             android:name=".java.AddActivity"
             android:exported="true" />
+
 
 
         <activity
@@ -99,10 +137,16 @@
             android:theme="@style/AppTheme">
         </activity>
 
+
         <activity
             android:name=".preference.SettingsActivity"
             android:exported="false"/>
 
+
+
+        <activity
+            android:name=".java.ResultActivity"
+            android:exported="false"/>
 
 
     </application>

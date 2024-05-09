@@ -50,6 +50,7 @@
     <item>@string/pref_entry_values_pose_detector_performance_mode_fast</item>
     <item>@string/pref_entry_values_pose_detector_performance_mode_accurate</item>
   </string-array>
+
   <integer-array name="images">
     <item>@drawable/image1_placeholder</item>
     <item>@drawable/image2_placeholder</item>
@@ -70,5 +71,6 @@
     <item>https://detail.tmall.com/item.htm?abbucket=8&amp;id=741117473537&amp;ns=1&amp;spm=3750m.1.0.0.4f45523cacl74D</item>
     <item>https://detail.tmall.com/item.htm?abbucket=8&amp;id=669274507183&amp;ns=1&amp;spm=3750m.1.0.0.4f45523cacl74D</item>
     <item>https://detail.tmall.com/item.htm?abbucket=8&amp;id=661873579767&amp;ns=1&amp;spm=3750m.1.0.0.4f45523cacl74D</item>
+
   </string-array>
 </resources>
