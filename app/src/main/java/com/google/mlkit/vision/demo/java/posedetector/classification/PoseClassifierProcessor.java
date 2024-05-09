@@ -26,6 +26,7 @@ import com.google.common.base.Preconditions;
 import com.google.mlkit.vision.pose.Pose;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -208,14 +209,15 @@ public class PoseClassifierProcessor {
         residualFrames--;
         String poseForThisFrame = poseAccuracyClassifier.getPoseAccuracy(pose);
         poseAccuracy.add(poseForThisFrame);
-        Log.e(TAG,"完成动作准确度分类");
-        if (!poseForThisFrame.equals("standard")){
-          outputWrongPose(poseForThisFrame);
-        }
       }
-      else if (residualFrames == 0){
+      else if (residualFrames <= 0){
         retPose = getMostCommonElement(poseAccuracy);
+        Log.e(TAG,"完成动作准确度分类");
         startTime = System.currentTimeMillis();
+        if (residualFrames == 0 && !retPose.equals("standard")){
+          outputWrongPose(retPose);
+        }
+        residualFrames--;
       }
     }
     if(isEnteredPose && conf < threshold){
@@ -272,11 +274,14 @@ public class PoseClassifierProcessor {
         file.createNewFile();
       }
 
-      // 将字符串写入文件
-      FileWriter writer = new FileWriter(file);
-      writer.write(output);
-      writer.flush();
-      writer.close();
+      // 创建文件输出流，以追加模式打开文件
+      FileOutputStream fos = new FileOutputStream(file, true); // 这里的true表示以追加模式打开文件
+      // 将要追加的内容转换为字节数组
+      byte[] bytes = output.getBytes();
+      // 将字节数组写入文件末尾
+      fos.write(bytes);
+      // 关闭文件输出流
+      fos.close();
     } catch (IOException e) {
       e.printStackTrace();
       // 处理文件操作异常

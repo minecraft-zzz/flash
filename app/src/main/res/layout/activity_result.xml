@@ -33,15 +33,20 @@
 
     </LinearLayout>
 
-    <!-- 另一个文字展示框 -->
-    <TextView
-        android:id="@+id/notice_text_view"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|start"
-        android:text="这里是另一个文字展示框"
         app:layout_constraintTop_toBottomOf="@id/video_player_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/notice_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|start"
+            android:text="这里是另一个文字展示框"/>
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

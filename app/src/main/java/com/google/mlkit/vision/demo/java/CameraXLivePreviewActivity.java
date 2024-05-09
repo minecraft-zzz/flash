@@ -286,7 +286,7 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
       bindPreviewUseCase();
 
       // 判断 pose_result 文件夹是否为空，如果不为空则清空文件夹
-      //clearFolder(poseResultFolder);
+      clearFolder(poseResultFolder);
       // 获取当前时间戳
       long currentTimeMillis = System.currentTimeMillis();
       // 将当前时间戳写入到 pose_result 文件夹中的 startTime.txt 文件
@@ -296,13 +296,17 @@ public final class CameraXLivePreviewActivity extends AppCompatActivity
   }
 
   private void clearFolder(File folder) {
-    if (folder.isDirectory()) {
-      File[] files = folder.listFiles();
-      if (files != null) {
-        for (File file : files) {
-          file.delete(); // 删除文件
-        }
-      }
+    File start = new File(folder, "startTime.txt");
+    File notice = new File(folder, "advice.txt");
+    if (start.exists()) {
+      if(start.delete()){
+        Log.e(TAG,"startTime 文件删除");
+      };
+    }
+    if(notice.exists()){
+      if(notice.delete()){
+        Log.e(TAG,"advice 文件删除");
+      };
     }
   }
 

@@ -128,6 +128,7 @@ public class PoseGraphic extends Graphic {
 
     if(poseAccuracy != ""){
         drawNotice(canvas,poseAccuracy);
+        Log.e("poseGraphic","提示");
     }
 
     // Draw all the points
