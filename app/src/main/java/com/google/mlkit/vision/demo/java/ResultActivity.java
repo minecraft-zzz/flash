@@ -2,6 +2,7 @@ package com.google.mlkit.vision.demo.java;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.mlkit.vision.demo.R;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ResultActivity extends AppCompatActivity {
+    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,6 @@ public class ResultActivity extends AppCompatActivity {
         // 将时间戳转换为 hh:mm:ss 格式的时间
         String formattedTime = convertMillisToTimeString(elapsedTime);
 
-        // 获取图片展示框容器
-        LinearLayout imageContainer = findViewById(R.id.image_container);
 
         TextView time = findViewById(R.id.text_view);
         //String dynamicText =  "st"+ String.valueOf(startTime) + "end"+ String.valueOf(currentTime);
@@ -43,40 +44,44 @@ public class ResultActivity extends AppCompatActivity {
         time.setText(dynamicText);
 
 
-        // 假设你有一个图片资源数组和对应的讲解文字数组
-        int[] imageResources = {R.drawable.common_google_signin_btn_icon_dark, R.drawable.common_google_signin_btn_icon_dark_focused, R.drawable.common_google_signin_btn_icon_light};
-        String[] explanations = {"这是图片1的讲解", "这是图片2的讲解", "这是图片3的讲解"};
+        File poseResultFolder = new File(getFilesDir(), "pose_result_video");
 
-        // 遍历图片资源数组，为每个图片创建一个布局，包含 ImageView 和 TextView，并添加到容器中
-        for (int i = 0; i < imageResources.length; i++) {
-            // 创建图片展示框布局
-            LinearLayout imageLayout = new LinearLayout(this);
-            imageLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            imageLayout.setOrientation(LinearLayout.VERTICAL);
+        videoView = findViewById(R.id.video_view);
 
-            // 创建 ImageView
-            ImageView imageView = new ImageView(this);
-            imageView.setImageResource(imageResources[i]);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+        File recordedVideoFile = new File(poseResultFolder, "recorded_video.mp4");
+        // 指定视频文件的路径
+        String videoPath = recordedVideoFile.getAbsolutePath();
 
-            // 创建 TextView 用于讲解文字
-            TextView textView = new TextView(this);
-            textView.setText(explanations[i]);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
+        // 为视频播放器设置路径并开始播放
+        playVideo(videoPath);
 
-            // 将 ImageView 和 TextView 添加到图片展示框布局中
-            imageLayout.addView(imageView);
-            imageLayout.addView(textView);
 
-            // 将图片展示框布局添加到图片展示框容器中
-            imageContainer.addView(imageLayout);
+
+        TextView noticeTextView = findViewById(R.id.notice_text_view);
+
+        String noticeText = "bbb";
+        // 创建一个 StringBuilder 对象来保存文件名
+        StringBuilder stringBuilder = new StringBuilder();
+// 检查文件夹是否存在
+        if (poseResultFolder.exists() && poseResultFolder.isDirectory()) {
+            noticeText = "这aaa";
+            // 获取pose_result文件夹中的所有文件
+            File[] files = poseResultFolder.listFiles();
+            // 遍历所有文件，并将文件名添加到 stringBuilder 中
+            for (File file : files) {
+                if (file.isFile()) {
+                    stringBuilder.append(file.getName()).append("\n");
+                }
+            }
         }
+
+            // 将 stringBuilder 中的内容转换为字符串
+        String fileList = stringBuilder.toString();
+        // 设置文本内容
+        noticeTextView.setText(fileList);
+
+
+
     }
 
     private long readTimestampFromFile() {
@@ -119,6 +124,13 @@ public class ResultActivity extends AppCompatActivity {
             return String.format("%02d分%02d秒", minutes, seconds);
         } else {
             return String.format("%02d秒", seconds);
+        }
+    }
+
+    private void playVideo(String path) {
+        if (videoView != null) {
+            videoView.setVideoURI(Uri.parse(path));
+            videoView.start();
         }
     }
 }
