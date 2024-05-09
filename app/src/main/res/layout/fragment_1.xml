@@ -70,7 +70,9 @@
                         android:gravity="center"
                         android:text="Hello,this is Chatgpt.\nHow can I assist you today?"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:clickable="true"
+                        android:onClick="onTextViewClicked"/>
                 </FrameLayout>
 
             </androidx.cardview.widget.CardView>

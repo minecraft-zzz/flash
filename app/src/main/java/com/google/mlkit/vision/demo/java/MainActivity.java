@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 // 点击 "日记" 导航项，启动相应的 Activity
-                Intent intent = new Intent(MainActivity.this, Activity_diary.class);
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,6 +1,5 @@
 package com.google.mlkit.vision.demo.java;
 
-
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.mlkit.vision.demo.R;
@@ -33,6 +30,7 @@ public class Fragment1 extends Fragment {
     private TextView chatTextView;
     private String originalText;
     private ViewPager2 viewPager2;
+
     private static class MyHandler extends Handler {
         private final WeakReference<Fragment1> fragmentRef;
 
@@ -79,57 +77,51 @@ public class Fragment1 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_1, container, false);
 
         viewPager2 = view.findViewById(R.id.viewPager2);
-
-        // 创建照片数据列表
         List<Integer> photoList = new ArrayList<>();
         photoList.add(R.drawable.image1_placeholder);
         photoList.add(R.drawable.image2_placeholder);
         photoList.add(R.drawable.image3_placeholder);
-        // 添加更多照片...
 
-        // 创建并设置适配器
-        PhotoAdapter photoAdapter = new PhotoAdapter(photoList,requireContext());
+        PhotoAdapter photoAdapter = new PhotoAdapter(photoList, requireContext());
         viewPager2.setAdapter(photoAdapter);
 
-        // 设置自动翻页
         startAutoCycle();
 
         CardView cardView = view.findViewById(R.id.imgCard1);
-
-        // 为CardView设置点击监听器
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Handle card click
             }
         });
 
-        // Find TextView
         chatTextView = view.findViewById(R.id.chattextview);
+        chatTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        // Get the originally set text
         originalText = chatTextView.getText().toString();
-
-        // Clear the text in TextView for gradual display
         chatTextView.setText("");
 
-        // Set up the handler
         handler = new MyHandler(this);
 
-        // Set up the animation
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Set up the animation
                 fadeInText(originalText);
             }
         }, 1000);
+
         return view;
     }
 
     private void startAutoCycle() {
-        final int delay = 3000; // 设置延迟时间，单位为毫秒
-        final int duration = 500; // 设置动画持续时间，单位为毫秒
+        final int delay = 3000;
+        final int duration = 500;
 
         final Handler autoCycleHandler = new Handler();
         autoCycleHandler.postDelayed(new Runnable() {
@@ -138,10 +130,8 @@ public class Fragment1 extends Fragment {
                 int currentItem = viewPager2.getCurrentItem();
                 int totalItems = viewPager2.getAdapter().getItemCount();
 
-                // 如果当前项是最后一项，则切换到第一项，否则切换到下一项
                 viewPager2.setCurrentItem((currentItem + 1) % totalItems);
 
-                // 递归调用，实现循环
                 autoCycleHandler.postDelayed(this, delay);
             }
         }, delay);
@@ -149,44 +139,24 @@ public class Fragment1 extends Fragment {
 
     private void fadeInText(final String text) {
         final int length = text.length();
-        final int durationPerCharacter = 120; // Set the time for each character to be displayed, in milliseconds
+        final int durationPerCharacter = 120;
 
         for (int i = 0; i < length; i++) {
             final int index = i;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // Add text character by character
                     chatTextView.append(String.valueOf(text.charAt(index)));
 
-                    // If it's the last character, you can perform any additional actions if needed
-
-                    // For example, you can trigger some other functionality or UI updates
                     if (index == length - 1) {
-                        // Do something if needed
+                        // Additional actions after last character
                     }
                 }
             }, i * durationPerCharacter);
         }
     }
 
-    private void startFadeInAnimation(int totalDuration) {
-        // Set up the animation
-        ValueAnimator fadeIn = ValueAnimator.ofFloat(0f, 1f);
-        fadeIn.setDuration(totalDuration); // Total duration of the fade-in animation
-
-        fadeIn.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float alpha = (float) valueAnimator.getAnimatedValue();
-                chatTextView.setAlpha(alpha);
-            }
-        });
-
-        fadeIn.start();
-    }
-
     private void handleMessage(Message msg) {
-        // No need for handling messages in this scenario
+        // Handle messages if necessary
     }
 }

@@ -1,114 +1,125 @@
 package com.google.mlkit.vision.demo.java;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.mlkit.vision.demo.R;
+import com.google.mlkit.vision.demo.dao.UserDao;
+import com.google.mlkit.vision.demo.entity.User;
 
-public class Activity_person extends BaseActivity {
+public class Activity_person extends AppCompatActivity {
 
-    private boolean isSwitching = false;
+    private EditText editTextName, editTextPassword;
+    private LinearLayout homeNav, diaryNav, libraryNav;
+
+    private static final String TAG = "Activity_person"; // 添加一个TAG用于日志打印
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_person);
 
-        getSupportActionBar().hide();
+        if (checkLoginState()) {
+            Intent intent = new Intent(this, PersonalInfoActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            setContentView(R.layout.activity_person);
+            initializeLoginComponents();
+            setupNavigation();
+        }
+    }
 
-        LinearLayout homeNav = findViewById(R.id.home);
-        LinearLayout diaryNav = findViewById(R.id.diary);
-        LinearLayout libraryNav = findViewById(R.id.action);
-        // 找到 Switch 组件
-        Switch nightModeSwitch = findViewById(R.id.switchMode);
-        int savedNightMode = getSavedNightModeState();
-        AppCompatDelegate.setDefaultNightMode(savedNightMode);
+    private void initializeLoginComponents() {
+        editTextName = findViewById(R.id.name);
+        editTextPassword = findViewById(R.id.password);
+        findViewById(R.id.button2).setOnClickListener(this::login);
+        findViewById(R.id.button3).setOnClickListener(this::reg);
+    }
 
-        // 设置 Switch 组件的状态
-        nightModeSwitch.setChecked(savedNightMode == AppCompatDelegate.MODE_NIGHT_YES);
+    private void setupNavigation() {
+        homeNav = findViewById(R.id.home);
+        diaryNav = findViewById(R.id.diary);
+        libraryNav = findViewById(R.id.action);
 
-        // 设置夜间模式切换监听器
-        nightModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // 如果正在进行切换，不执行下面的操作
-                if (isSwitching) {
-                    return;
+        homeNav.setOnClickListener(v -> navigateTo(MainActivity.class));
+        diaryNav.setOnClickListener(v -> navigateTo(Activity_diary.class));
+        libraryNav.setOnClickListener(v -> navigateTo(Activity_action.class));
+    }
+
+    private void navigateTo(Class<?> activityClass) {
+        Intent intent = new Intent(Activity_person.this, activityClass);
+        startActivity(intent);
+        finish();
+    }
+
+    public void login(View view) {
+        String name = editTextName.getText().toString();
+        String password = editTextPassword.getText().toString();
+        new Thread(() -> {
+            UserDao userDao = new UserDao();
+            boolean loginSuccess = userDao.login(name, password);
+            if (loginSuccess) {
+                Log.d(TAG, "登录验证成功，正在从数据库获取用户信息");
+                User user = userDao.findUser(name);
+                if (user != null) {
+                    Log.d(TAG, "从数据库成功获取用户信息");
+                    saveUserInfo(user);
+                } else {
+                    Log.d(TAG, "未能从数据库获取用户信息");
                 }
-
-                // 标记为正在切换
-                isSwitching = true;
-
-                // 获取新的夜间模式
-                int newNightMode = isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-
-                // 设置夜间模式
-                getDelegate().setLocalNightMode(newNightMode);
-
-                // 通知系统重新绘制窗口内容
-                getWindow().getDecorView().invalidate();
-
-                // 添加日志以跟踪事件
-                Log.d("NightModeSwitch", "Switch state changed. New Night Mode: " + newNightMode);
-
-                // 保存夜间模式状态
-                saveNightModeState(newNightMode);
-
-                // 延迟一段时间后，将切换状态标记为 false
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        isSwitching = false;
-                    }
-                }, 1000); // 这里的延迟时间可以根据需要调整
+                hand1.sendEmptyMessage(1);
+            } else {
+                Log.d(TAG, "登录验证失败");
+                hand1.sendEmptyMessage(0);
             }
-        });
+        }).start();
+    }
 
+    public void reg(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
 
-        homeNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 点击 "主页" 导航项，启动相应的 Activity
-                Intent intent = new Intent(Activity_person.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+    final Handler hand1 = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_LONG).show();
+                navigateTo(MainActivity.class);
+            } else {
+                Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_LONG).show();
             }
-        });
+        }
+    };
 
-        diaryNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 点击 "日记" 导航项，启动相应的 Activity
-                Intent intent = new Intent(Activity_person.this, Activity_diary.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    private static final String PREF_FILE_NAME = "com.google.mlkit.vision.demo.preferences";
 
-        libraryNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 点击 "动作库" 导航项，启动相应的 Activity
-                Intent intent = new Intent(Activity_person.this, Activity_action.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    private void saveUserInfo(User user) {
+        SharedPreferences prefs = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.putString("name", user.getName());
+        editor.putString("username", user.getUsername());
+        editor.putInt("age", user.getAge());
+        editor.putString("phone", user.getPhone());
+        editor.apply();
+        Log.d(TAG, "用户信息已存储到本地SharedPreferences");
+    }
+
+    private boolean checkLoginState() {
+        SharedPreferences prefs = getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        return prefs.getBoolean("isLoggedIn", false);
     }
 }
