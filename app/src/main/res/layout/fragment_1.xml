@@ -34,12 +34,19 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp" >
 
-                <ImageView
-                    android:id="@+id/imageView"
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/img" />-->
+                <VideoView
+                    android:id="@+id/video_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/img" />
+                    app:layout_constraintTop_toBottomOf="@id/text_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

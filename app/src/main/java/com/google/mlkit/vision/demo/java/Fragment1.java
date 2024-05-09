@@ -1,7 +1,9 @@
 package com.google.mlkit.vision.demo.java;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.VideoView;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+
+import com.google.mlkit.vision.demo.R;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.VideoView;
+import android.widget.SeekBar;
+
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,6 +45,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.mlkit.vision.demo.R;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +59,7 @@ public class Fragment1 extends Fragment {
     private TextView chatTextView;
     private String originalText;
     private ViewPager2 viewPager2;
+    private VideoView videoView;
 
     private static class MyHandler extends Handler {
         private final WeakReference<Fragment1> fragmentRef;
@@ -103,6 +133,18 @@ public class Fragment1 extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+        videoView = view.findViewById(R.id.video_view);
+
+        File poseResultFolder = new File(requireContext().getFilesDir(), "pose_result_video");
+        File recordedVideoFile = new File(poseResultFolder, "recorded_video.mp4");
+        // 指定视频文件的路径
+        String videoPath = recordedVideoFile.getAbsolutePath();
+
+        Uri uri = Uri.parse(videoPath);
+        videoView.setVideoURI(uri);
+        videoView.start();
 
         originalText = chatTextView.getText().toString();
         chatTextView.setText("");
