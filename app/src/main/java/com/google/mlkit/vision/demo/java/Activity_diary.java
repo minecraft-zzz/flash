@@ -43,6 +43,9 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.mlkit.vision.demo.R;
 
@@ -69,11 +72,27 @@ public class Activity_diary extends BaseActivity {
         CalendarView calendarView = findViewById(R.id.calendarView);
 
 
-        GridView mGridView = findViewById(R.id.gridView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView); // 更换为 RecyclerView
 
-        // Create and set adapter
+        // 创建并设置适配器
         mAdapter = new VideoAdapter(this);
-        mGridView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 设置布局管理器
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false; // 不处理拖动事件
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                mAdapter.removeVideo(position); // 自定义方法，删除特定位置的视频
+                // 删除对应的 SharedPreferences 存储的条目
+            }
+        };
+
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
 
         titleTextView = findViewById(R.id.title); // 找到用于显示标题的 TextView
@@ -129,8 +148,10 @@ public class Activity_diary extends BaseActivity {
         if (entry != null) {
             String title = entry.getTitle();
             String content = entry.getContent();
-            ArrayList<Integer> videoResourceIds = entry.getVideoResourceIds();;
-            ArrayList<String> videonames = entry.getVideoNames();;
+            ArrayList<Integer> videoResourceIds = entry.getVideoResourceIds();
+            ;
+            ArrayList<String> videonames = entry.getVideoNames();
+            ;
             ArrayList<Integer> GroupNumbers = entry.getGroupNumbers();
             ArrayList<Integer> Numbers = entry.getNumbers();
             titleTextView.setText(title);
@@ -156,15 +177,17 @@ public class Activity_diary extends BaseActivity {
                     if (entry != null) {
                         String title = entry.getTitle();
                         String content = entry.getContent();
-                        ArrayList<Integer> videoResourceIds = entry.getVideoResourceIds();;
-                        ArrayList<String> videonames = entry.getVideoNames();;
+                        ArrayList<Integer> videoResourceIds = entry.getVideoResourceIds();
+                        ;
+                        ArrayList<String> videonames = entry.getVideoNames();
+                        ;
                         ArrayList<Integer> GroupNumbers = entry.getGroupNumbers();
                         ArrayList<Integer> Numbers = entry.getNumbers();
                         titleTextView.setText(title);
                         contentTextView.setText(content);
-                        mAdapter.setVideoResourceIds(videoResourceIds, videonames, GroupNumbers, Numbers);;
-                    }
-                    else {
+                        mAdapter.setVideoResourceIds(videoResourceIds, videonames, GroupNumbers, Numbers);
+                        ;
+                    } else {
                         titleTextView.setText("");
                         contentTextView.setText("");
                         mAdapter.setVideoResourceIds(null, null, null, null);
@@ -190,14 +213,6 @@ public class Activity_diary extends BaseActivity {
             }
         });
 
-        ImageView imageView = findViewById(R.id.fab);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Activity_diary.this, IntermediaryActivity  .class);
-                startActivity(intent);
-            }
-        });
         homeNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,16 +244,50 @@ public class Activity_diary extends BaseActivity {
         });
     }
 
-    private static class VideoAdapter extends BaseAdapter {
+    public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
         private final Context mContext;
         private ArrayList<Integer> mVideoResourceIds;
         private ArrayList<String> mVideoNames;
         private ArrayList<Integer> mGroupNumbers;
         private ArrayList<Integer> mNumbers;
+
         public VideoAdapter(Context context) {
             mContext = context;
             mVideoResourceIds = new ArrayList<>();
         }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.grid_item_video1, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            int groupNumber = mGroupNumbers != null && mGroupNumbers.size() > position ? mGroupNumbers.get(position) : 0;
+            int number = mNumbers != null && mNumbers.size() > position ? mNumbers.get(position) : 0;
+            holder.groupEditText.setText(String.valueOf(groupNumber));
+            holder.numberEditText.setText(String.valueOf(number));
+            String videoName = mVideoNames != null && mVideoNames.size() > position ? mVideoNames.get(position) : "";
+            String chineseName = VideoNameConverter.convertToChinese(videoName);
+            holder.nameTextView.setText(chineseName);
+            int videoResourceId = mVideoResourceIds.get(position);
+            String uri = "android.resource://" + mContext.getPackageName() + "/" + videoResourceId;
+            holder.videoView.setVideoURI(Uri.parse(uri));
+            holder.videoView.start();
+            holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.setLooping(true);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mVideoResourceIds != null ? mVideoResourceIds.size() : 0;
+        }
+
         public void setVideoResourceIds(ArrayList<Integer> videoResourceIds, ArrayList<String> videonames, ArrayList<Integer> GroupNumbers, ArrayList<Integer> Numbers) {
             mVideoResourceIds = videoResourceIds;
             mVideoNames = videonames;
@@ -246,65 +295,31 @@ public class Activity_diary extends BaseActivity {
             mNumbers = Numbers;
             notifyDataSetChanged();
         }
-        @Override
-        public int getCount() {
-            return mVideoResourceIds != null ? mVideoResourceIds.size() : 0;
-        }
-        @Override
-        public Object getItem(int position) {
-            return mVideoResourceIds.get(position); // Return the video resource ID at the specified position
-        }
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            VideoAdapter.ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item_video1, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.videoView = convertView.findViewById(R.id.video);
-                viewHolder.nameTextView = convertView.findViewById(R.id.name); // 找到 TextView
-                viewHolder.groupEditText = convertView.findViewById(R.id.group); // 找到组 EditText
-                viewHolder.numberEditText = convertView.findViewById(R.id.number); // 找到数字 EditText
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (VideoAdapter.ViewHolder) convertView.getTag();
+
+        public void removeVideo(int position) {
+            if (mVideoResourceIds != null && position < mVideoResourceIds.size()) {
+                mVideoResourceIds.remove(position);
+                mVideoNames.remove(position);
+                mGroupNumbers.remove(position);
+                mNumbers.remove(position);
+                notifyItemRemoved(position);
             }
-            int groupNumber = 0;
-            int number = 0;
-            if (mGroupNumbers != null && mGroupNumbers.size() > position) {
-                groupNumber = mGroupNumbers.get(position);
-            }
-            if (mNumbers != null && mNumbers.size() > position) {
-                number = mNumbers.get(position);
-            }
-            viewHolder.groupEditText.setText(String.valueOf(groupNumber));
-            viewHolder.numberEditText.setText(String.valueOf(number));
-            String videoName = "";
-            if (mVideoNames != null && mVideoNames.size() > position) {
-                videoName = mVideoNames.get(position);
-            }
-            String chineseName = VideoNameConverter.convertToChinese(videoName);
-            viewHolder.nameTextView.setText(chineseName);
-            int videoResourceId = mVideoResourceIds.get(position); // 从数组中获取视频资源 ID
-            final String uri = "android.resource://" + mContext.getPackageName() + "/" + videoResourceId;
-            viewHolder.videoView.setVideoURI(Uri.parse(uri));
-            viewHolder.videoView.start();
-            viewHolder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
-                }
-            });
-            return convertView;
         }
-        private static class ViewHolder {
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             EditText groupEditText;
             EditText numberEditText;
             TextView nameTextView;
             VideoView videoView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                videoView = itemView.findViewById(R.id.video);
+                nameTextView = itemView.findViewById(R.id.name);
+                groupEditText = itemView.findViewById(R.id.group);
+                numberEditText = itemView.findViewById(R.id.number);
+            }
         }
     }
 }
+
