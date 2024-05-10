@@ -190,6 +190,14 @@ public class Activity_diary extends BaseActivity {
             }
         });
 
+        ImageView imageView = findViewById(R.id.fab);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_diary.this, IntermediaryActivity  .class);
+                startActivity(intent);
+            }
+        });
         homeNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -89,8 +89,7 @@ public class MainActivity extends BaseActivity{
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 点击 "日记" 导航项，启动相应的 Activity
-                Intent intent = new Intent(MainActivity.this, CameraXLivePreviewActivity.class);
+                Intent intent = new Intent(MainActivity.this, IntermediaryActivity  .class);
                 startActivity(intent);
             }
         });

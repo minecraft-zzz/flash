@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal"> <!-- 添加这一行来确保所有子视图居中 -->
+
+        <!-- 示例的图片和文本行 -->
+
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:textSize="30dp"
+                android:text="徒手深蹲" />
+
+            <ImageView
+                android:id="@+id/image_to_camera"
+
+                android:layout_width="121dp"
+                android:layout_height="124dp"
+                android:src="@drawable/bread" />
+        </LinearLayout>
+
+        <!-- 可以继续添加更多的图片和文本行 -->
+
+        <!-- 更多动作正在开发中的文本 -->
+        <LinearLayout
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:textSize="30dp"
+                android:text="哑铃推肩" />
+
+
+            <ImageView
+                android:layout_width="121dp"
+                android:layout_height="124dp"
+                android:src="@drawable/bread" /> <!-- 替换为你的图片资源 -->
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="更多动作正在开发中"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"/>
+    </LinearLayout>
+</ScrollView>
+

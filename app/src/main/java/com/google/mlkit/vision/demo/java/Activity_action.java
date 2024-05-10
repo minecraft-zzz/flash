@@ -111,6 +111,14 @@ public class Activity_action extends BaseActivity {
                 finish();
             }
         });
+        ImageView imageView = findViewById(R.id.fab);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_action.this, IntermediaryActivity  .class);
+                startActivity(intent);
+            }
+        });
     }
 
 

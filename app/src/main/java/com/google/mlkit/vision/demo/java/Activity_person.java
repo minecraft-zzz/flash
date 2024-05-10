@@ -49,7 +49,7 @@ public class Activity_person extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 点击 "日记" 导航项，启动相应的 Activity
-                Intent intent = new Intent(Activity_person.this, CameraXLivePreviewActivity.class);
+                Intent intent = new Intent(Activity_person.this, IntermediaryActivity.class);
                 startActivity(intent);
             }
         });
