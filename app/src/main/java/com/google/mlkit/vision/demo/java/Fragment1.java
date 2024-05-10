@@ -149,15 +149,27 @@ public class Fragment1 extends Fragment {
 
 
         videoView = view.findViewById(R.id.video_view);
+        TextView adviceView = view.findViewById(R.id.advice);
 
         File poseResultFolder = new File(requireContext().getFilesDir(), "pose_result_video");
         File recordedVideoFile = new File(poseResultFolder, "recorded_video.mp4");
+
+
+        File file = new File(requireContext().getFilesDir(), "/pose_result/advice.txt");
+
+        if (file.exists()){
+            adviceView.setText("您最近的矫正记录如下");
+        }
+        else{
+            adviceView.setText("您最近无矫正记录");
+        }
 
         // 检查文件是否存在
         if (recordedVideoFile.exists()) {
             // 文件存在，使用文件路径
             Uri uri = Uri.parse(recordedVideoFile.getAbsolutePath());
             videoView.setVideoURI(uri);
+
         } else {
             // 文件不存在，使用raw资源
             Uri uri = Uri.parse("android.resource://" + requireContext().getPackageName() + "/" + R.raw.a1);
@@ -165,6 +177,17 @@ public class Fragment1 extends Fragment {
         }
 
         videoView.start();
+
+
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 创建一个 Intent 对象，用于跳转到另一个 Activity
+                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                // 启动 Intent
+                startActivity(intent);
+            }
+        });
 
         originalText = chatTextView.getText().toString();
         chatTextView.setText("");
