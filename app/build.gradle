@@ -170,6 +170,9 @@ dependencies {
     implementation "com.airbnb.android:lottie:5.2.0"
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    implementation 'com.github.Visen123:CalendarView:V1.0'
 }
 
 configurations {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background"
+
+    tools:context=".java.Activity_diary">
+
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        style="@style/CustomCalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="87dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/calendarView"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="297dp"
+        android:layout_height="68dp"
+        android:layout_below="@+id/calendarView"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/title"
+        android:text=""
+        android:textColor="@color/black" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="395dp"
+        android:layout_below="@+id/textview"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="3dp" />
+
+</RelativeLayout>
+

@@ -37,34 +37,25 @@ import java.util.concurrent.Executors;
 
 public class Activity_action extends BaseActivity {
     private static final String TAG = "Activity_action";
-
     private GridView mGridView;
     private ListView mListView;
     private VideoAdapter mAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action);
-
         // Find ListView
         mListView = findViewById(R.id.muscle_list);
-
         // Set adapter
-
         String[] data1 = {"胸", "肩", "背", "臀腿", "手臂", "核心", "综合"};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data1);
         mListView.setAdapter(adapter1);
-
         String[] data = {"a", "b", "c", "d", "e", "f", "g"};
-
         // Find GridView
         mGridView = findViewById(R.id.exercise_list);
-
         // Create and set adapter
         mAdapter = new VideoAdapter(this);
         mGridView.setAdapter(mAdapter);
-
         // Set item click listener for muscle_list
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,15 +66,11 @@ public class Activity_action extends BaseActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-
-
         LinearLayout homeNav = findViewById(R.id.home);
         LinearLayout diaryNav = findViewById(R.id.diary);
         LinearLayout profileNav = findViewById(R.id.person);
-
         int savedNightMode = getSavedNightModeState();
         AppCompatDelegate.setDefaultNightMode(savedNightMode);
-
         homeNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +80,6 @@ public class Activity_action extends BaseActivity {
 
             }
         });
-
         diaryNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +88,6 @@ public class Activity_action extends BaseActivity {
                 finish();
             }
         });
-
         profileNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,18 +102,16 @@ public class Activity_action extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Activity_action.this, IntermediaryActivity  .class);
                 startActivity(intent);
+                finish();
             }
         });
     }
-
-
     private static class VideoLoadTask implements Runnable {
         private final WeakReference<Activity_action> activityRef;
         private final int position;
         private final String videoName;
         private final String chineseName;
         private final VideoView videoView;
-
         public VideoLoadTask(Activity_action activity, int position, String videoName, String chineseName, VideoView videoView) {
             this.activityRef = new WeakReference<>(activity);
             this.position = position;
@@ -136,7 +119,6 @@ public class Activity_action extends BaseActivity {
             this.chineseName = chineseName;
             this.videoView = videoView;
         }
-
         @Override
         public void run() {
             final Activity_action activity = activityRef.get();

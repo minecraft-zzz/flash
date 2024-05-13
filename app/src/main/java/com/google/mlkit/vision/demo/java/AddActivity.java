@@ -3,10 +3,8 @@ package com.google.mlkit.vision.demo.java;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -17,8 +15,6 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
-
-
 public class AddActivity extends BaseActivity {
     private static final String TAG = "Activity_add";
 
@@ -44,7 +40,6 @@ public class AddActivity extends BaseActivity {
 
         // Create and set adapter
         mAdapter = new VideoAdapter(this);
-        mAdapter.updateVideoCount();
         mGridView.setAdapter(mAdapter);
     }
 
@@ -54,36 +49,46 @@ public class AddActivity extends BaseActivity {
         private int mVideoCount = 18;
         public VideoAdapter(Context context) {
             mContext = context;
+            updateVideoCountInBackground();
         }
-        private void updateVideoCount() {
-            // 根据字母确定视频数量的逻辑
-            // 这里假设您有一种方法可以确定每个字母对应的视频数量
-                        switch (mSelectedItem) {
-                case "a":
-                    mVideoCount = 18;
-
-                    break;
-                case "b":
-                case "e":
-                    mVideoCount = 16;
-                    break;
-                case "c":
-                    mVideoCount = 14;
-                    break;
-                case "d":
-                    mVideoCount = 29;
-                    break;
-                case "f":
-                    mVideoCount = 12;
-                    break;
-                case "g":
-                    mVideoCount = 7;
-                    break;
-                default:
-                    mVideoCount = 0; // 默认情况下没有视频
-                    break;
-            }
-
+        private void updateVideoCountInBackground() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // 在这里执行耗时操作
+                    switch (mSelectedItem) {
+                        case "a":
+                            mVideoCount = 18;
+                            break;
+                        case "b":
+                        case "e":
+                            mVideoCount = 16;
+                            break;
+                        case "c":
+                            mVideoCount = 14;
+                            break;
+                        case "d":
+                            mVideoCount = 29;
+                            break;
+                        case "f":
+                            mVideoCount = 12;
+                            break;
+                        case "g":
+                            mVideoCount = 7;
+                            break;
+                        default:
+                            mVideoCount = 0; // 默认情况下没有视频
+                            break;
+                    }
+                    // 更新完后在主线程中更新 UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged(); // 通知数据集已更改
+                        }
+                    });
+                }
+            }).start();
         }
         @Override
         public int getCount() {
@@ -109,17 +114,13 @@ public class AddActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
             final String videoName = mSelectedItem + (position + 1);
             String chineseName = VideoNameConverter.convertToChinese(videoName);
             int videoResourceId = mContext.getResources().getIdentifier(videoName, "raw", mContext.getPackageName());
             final String uri = "android.resource://" + mContext.getPackageName() + "/" + videoResourceId;
-
             viewHolder.videoView.setVideoURI(Uri.parse(uri));
             viewHolder.videoView.start();
-
-            viewHolder.nameTextView.setText(chineseName); // 将 TextView 的文本设置为 videoName
-
+            viewHolder.nameTextView.setText(chineseName);
             viewHolder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -138,6 +139,7 @@ public class AddActivity extends BaseActivity {
             });
             return convertView;
         }
+
         private class ViewHolder {
             TextView nameTextView;
             VideoView videoView;

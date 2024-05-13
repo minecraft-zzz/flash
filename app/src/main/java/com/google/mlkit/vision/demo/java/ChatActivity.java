@@ -32,7 +32,6 @@ public class ChatActivity extends Activity {
     private SharedPreferences preferences;
 
     private RecyclerView rc_chatlist;
-    //private LottieAnimationView lo_msgloading;
     final int MESSAGE_UPDATE_VIEW = 1;
 
     @Override

@@ -33,7 +33,6 @@ public class Activity_person extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if (checkLoginState()) {
             Intent intent = new Intent(this, PersonalInfoActivity.class);
             startActivity(intent);

@@ -18,7 +18,6 @@
             <androidx.appcompat.widget.SearchView
                 android:queryHint="搜索"
                 android:iconifiedByDefault="false"
-                android:id="@+id/mSearchView"
                 android:layout_width="350dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
@@ -26,7 +25,6 @@
                 android:layout_height="wrap_content" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/imgCard"
                 android:layout_width="350dp"
                 android:layout_height="250dp"
                 app:cardCornerRadius="50dp"
@@ -56,7 +54,6 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/imageView1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"

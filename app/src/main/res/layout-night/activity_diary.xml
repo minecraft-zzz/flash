@@ -40,7 +40,6 @@
 </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -67,7 +66,6 @@
                     android:src="@drawable/home_icon" />
 
                 <TextView
-                    android:id="@+id/home_nav"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:gravity="center"
@@ -90,7 +88,6 @@
                     android:src="@drawable/diary_icon" />
 
                 <TextView
-                    android:id="@+id/diary_nav"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:gravity="center"
@@ -98,7 +95,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/blank"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -121,7 +117,6 @@
                     android:src="@drawable/library_icon" />
 
                 <TextView
-                    android:id="@+id/library_nav"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:gravity="center"
@@ -143,7 +138,6 @@
                     android:src="@drawable/profile_icon" />
 
                 <TextView
-                    android:id="@+id/profile_nav"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:gravity="center"
